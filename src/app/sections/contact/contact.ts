@@ -32,7 +32,7 @@ const CONTACT_EMAIL = 'draugelfordistrict2@gmail.com';
   template: `
     <section id="get-involved" class="shell py-16 md:py-24">
       <div appReveal class="max-w-2xl">
-        <p class="eyebrow">Get Involved</p>
+        <p class="eyebrow">Join us</p>
         <h2 class="bubble text-4xl md:text-5xl">Get Involved</h2>
         <p class="mt-4 text-lg text-ink">
           Want to help, host a sign, or just stay in the loop? Send a note.
@@ -45,7 +45,7 @@ const CONTACT_EMAIL = 'draugelfordistrict2@gmail.com';
         <form
           appReveal
           [appReveal]="80"
-          class="paper-card lg:col-span-3"
+          class="paper-card p-6 md:p-8 lg:col-span-3"
           novalidate
           (ngSubmit)="onSubmit()"
           [formGroup]="form"
@@ -137,7 +137,7 @@ const CONTACT_EMAIL = 'draugelfordistrict2@gmail.com';
         </form>
 
         <!-- Contact details + socials -->
-        <aside appReveal [appReveal]="160" class="paper-card lg:col-span-2">
+        <aside appReveal [appReveal]="160" class="paper-card p-6 md:p-8 lg:col-span-2">
           <h3 class="bubble text-2xl">Reach Us Directly</h3>
           <p class="mt-3 text-ink">
             Prefer email? Write to us anytime at:
@@ -151,7 +151,7 @@ const CONTACT_EMAIL = 'draugelfordistrict2@gmail.com';
           </p>
 
           <h3 class="bubble text-xl mt-8">Follow Along</h3>
-          <!-- TODO(social): Facebook is live. Set the Instagram URL when ready, or remove it. -->
+          <!-- TODO(social): only Facebook is wired up. Add Instagram / others here when their URLs exist. -->
           <ul class="mt-3 flex flex-wrap gap-3">
             @for (s of socials; track s.name) {
               <li>
@@ -165,9 +165,6 @@ const CONTACT_EMAIL = 'draugelfordistrict2@gmail.com';
                   @switch (s.name) {
                     @case ('facebook') {
                       <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.5 21v-7h2.3l.4-2.8h-2.7V9.4c0-.8.2-1.4 1.4-1.4h1.4V5.5c-.2 0-1.1-.1-2-.1-2 0-3.4 1.2-3.4 3.5v1.9H8.6V14h2.3v7h2.6z"/></svg>
-                    }
-                    @case ('instagram') {
-                      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
                     }
                   }
                 </a>
@@ -202,8 +199,9 @@ export class Contact {
   });
 
   /**
-   * Social links. Facebook is the live campaign page. Instagram is a
-   * placeholder (href "#"): set a real URL or remove it. See TODO(social).
+   * Social links. Only Facebook (the live campaign page) is shown. To add
+   * Instagram or others, push another entry with name/label/href/external and
+   * add a matching @case SVG in the template above.
    */
   protected readonly socials = [
     {
@@ -211,12 +209,6 @@ export class Contact {
       label: "Follow Lindsey Draugel's campaign on Facebook",
       href: 'https://www.facebook.com/profile.php?id=61567444822559',
       external: true,
-    },
-    {
-      name: 'instagram',
-      label: 'Follow on Instagram (link coming soon)',
-      href: '#',
-      external: false,
     },
   ];
 

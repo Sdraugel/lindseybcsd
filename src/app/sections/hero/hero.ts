@@ -20,18 +20,18 @@ import { ButtonDirective } from '../../shared/button.directive';
         </h1>
 
         <p
-          class="mt-5 font-display text-raspberry text-xl md:text-2xl font-semibold"
+          class="mt-5 font-display text-raspberry-ink text-xl md:text-2xl font-semibold"
         >
           For School Board · District 2
         </p>
 
         <ul class="mt-8 space-y-3">
           <li class="flex items-center gap-3">
-            <app-check [size]="40" />
+            <app-check [size]="48" [strokeWidth]="3.2" />
             <span class="callout text-2xl md:text-3xl">For our students.</span>
           </li>
           <li class="flex items-center gap-3">
-            <app-check [size]="40" />
+            <app-check [size]="48" [strokeWidth]="3.2" />
             <span class="callout text-2xl md:text-3xl">For our teachers.</span>
           </li>
         </ul>

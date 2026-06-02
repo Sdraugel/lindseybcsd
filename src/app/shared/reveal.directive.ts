@@ -46,7 +46,7 @@ export class RevealDirective {
     afterNextRender(() => {
       const el = this.host.nativeElement;
 
-      const delayMs = Number(this.delay()) || 0;
+      const delayMs = this.delay();
       if (delayMs > 0) {
         el.style.setProperty('--reveal-delay', `${delayMs}ms`);
       }

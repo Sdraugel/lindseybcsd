@@ -90,9 +90,9 @@ These are intentionally left for you to complete (search the code for `TODO`):
 | What | Where |
 | --- | --- |
 | **Contact form backend** (Formspree or EmailJS). Right now a valid submit opens the visitor's email app via `mailto:`. | `src/app/sections/contact/contact.ts` (`TODO(backend)`) |
-| **Instagram URL** (or remove the icon). Facebook is already wired to the live page. | `src/app/sections/contact/contact.ts` (`TODO(social)`) |
+| **More social links** (optional). Facebook is wired to the live page; add Instagram or others when their URLs exist. | `src/app/sections/contact/contact.ts` (`TODO(social)`) |
 | **Campaign-finance disclaimer + committee name.** Confirm the exact SC-required "Paid for by ..." wording before publishing. | `src/app/sections/footer/footer.ts` (`TODO(legal)`) |
-| **Social share image** (`og:image`) needs an absolute URL once hosted, and the favicon is still the Angular default. | `src/index.html` (`TODO(asset)`), `public/favicon.ico` |
+| **Favicon** is still the Angular default; replace it. (The `og:image` share card is already set to the live URL; update it if you move to a custom domain.) | `public/favicon.ico`, `src/index.html` |
 | **Photos** (swap any of the headshot / family / gallery images). Originals are in `src/imgs/`; optimized copies are in `public/img/`. | `src/app/sections/bio/bio.ts`, `src/app/sections/gallery/gallery.ts` |
 
 ## Notes on choices

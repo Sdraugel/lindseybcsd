@@ -10,9 +10,9 @@ import { RevealDirective } from '../../shared/reveal.directive';
   template: `
     <section id="meet" class="shell py-16 md:py-24">
       <div class="grid items-start gap-10 md:grid-cols-[minmax(0,1fr)_20rem]">
-        <!-- Text column (first on mobile) -->
-        <div appReveal class="order-2 md:order-1">
-          <p class="eyebrow">Meet Lindsey</p>
+        <!-- Text column: first on mobile, left on desktop -->
+        <div appReveal>
+          <p class="eyebrow">The candidate</p>
           <h2 class="bubble text-4xl md:text-5xl">Meet Lindsey</h2>
 
           <p
@@ -47,8 +47,8 @@ import { RevealDirective } from '../../shared/reveal.directive';
           </div>
         </div>
 
-        <!-- Photo column (after text on mobile) -->
-        <div appReveal [appReveal]="120" class="order-1 space-y-5 md:order-2">
+        <!-- Photo column: after text on mobile, right on desktop -->
+        <div appReveal [appReveal]="120" class="space-y-5">
           <!-- PHOTO: Lindsey headshot - swap the src to replace (optimized copies live in public/img/). -->
           <figure class="paper-card rotate-1 p-3">
             <div class="aspect-[4/5] overflow-hidden rounded-xl">

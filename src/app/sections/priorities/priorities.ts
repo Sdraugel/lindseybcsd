@@ -12,7 +12,7 @@ import { CheckmarkComponent } from '../../shared/checkmark';
     <section id="priorities" class="shell py-16 md:py-24">
       <div appReveal class="max-w-2xl">
         <p class="eyebrow">Priorities</p>
-        <h2 class="bubble text-4xl md:text-5xl">Priorities</h2>
+        <h2 class="bubble text-4xl md:text-5xl">What I'll Fight For</h2>
       </div>
 
       <ul
