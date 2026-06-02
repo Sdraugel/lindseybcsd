@@ -1,0 +1,260 @@
+/* =========================================================================
+   Draugel for District 2 - global styles
+   Stack: Tailwind CSS v4 (CSS-first) + Angular 21.
+   Fonts loaded via <link> in index.html ("Baloo 2", "Nunito").
+   ========================================================================= */
+
+@import "tailwindcss";
+
+/* -------------------------------------------------------------------------
+   THEME TOKENS
+   Variables in the --color-* / --font-* namespaces become Tailwind utilities:
+     --color-brand-blue      -> text-brand-blue / bg-brand-blue / border-brand-blue
+     --color-raspberry       -> text-raspberry / bg-raspberry / ...
+     --font-display          -> font-display
+   and are also available as plain CSS vars (var(--color-brand-blue)).
+   ------------------------------------------------------------------------- */
+@theme {
+  /* Surfaces */
+  --color-paper: #fbfaf3; /* off-white notebook paper */
+  --color-paper-soft: #fffefa; /* card / raised surface */
+
+  /* Text */
+  --color-ink: #2c2e35; /* dark slate body text (not pure black) */
+  --color-ink-soft: #565a63; /* muted slate for secondary text */
+
+  /* Brand - royal blue (headline bubble) */
+  --color-brand-blue: #2748c8;
+  --color-brand-blue-ink: #182a6e; /* dark navy outline / depth */
+  --color-brand-blue-soft: #3a5be0; /* links / hover */
+
+  /* Accent - dusty raspberry / mauve */
+  --color-raspberry: #b05878; /* large display accent */
+  --color-raspberry-ink: #8c4060; /* AA-contrast raspberry for smaller text */
+  --color-raspberry-soft: #e8c2d1; /* tints, sketch fills */
+
+  /* Notebook rules (also exposed as paint vars below for gradients) */
+  --color-rule-blue: #7aa7d6;
+  --color-rule-red: #d6685a;
+
+  /* Type */
+  --font-display: "Baloo 2", ui-rounded, "Segoe UI", system-ui, sans-serif;
+  --font-body: "Nunito", ui-sans-serif, system-ui, sans-serif;
+}
+
+/* Non-utility paint values (with alpha) for the notebook background gradients. */
+:root {
+  --paper-rule-blue: rgba(122, 167, 214, 0.34);
+  --paper-rule-red: rgba(214, 104, 90, 0.5);
+  --rule-gap: 2rem; /* spacing between horizontal ruled lines */
+  --margin-x: 1.75rem; /* x-offset of the red vertical margin line */
+  --nav-h: 4rem; /* sticky header height (for scroll-margin) */
+}
+
+@media (min-width: 768px) {
+  :root {
+    --rule-gap: 2.25rem;
+    --margin-x: 4.5rem;
+    --nav-h: 4.5rem;
+  }
+}
+
+/* -------------------------------------------------------------------------
+   BASE
+   ------------------------------------------------------------------------- */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    font-family: var(--font-body);
+    color: var(--color-ink);
+    background-color: var(--color-paper);
+    font-weight: 400;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Anchor targets clear the sticky header. */
+  :where(section, [id]) {
+    scroll-margin-top: calc(var(--nav-h) + 0.5rem);
+  }
+
+  /* Visible, on-brand focus ring for keyboard users. */
+  :where(a, button, input, textarea, select, [tabindex]):focus-visible {
+    outline: 3px solid var(--color-brand-blue);
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+
+  ::selection {
+    background: var(--color-raspberry-soft);
+    color: var(--color-ink);
+  }
+}
+
+/* -------------------------------------------------------------------------
+   COMPONENT CLASSES (reusable design-system pieces)
+   Placed in the components layer so Tailwind utilities can still override.
+   ------------------------------------------------------------------------- */
+@layer components {
+  /* Notebook paper background. Layer 1 = single red vertical margin line,
+     layer 2 = repeating faint blue horizontal rules. Used by <app-paper>. */
+  .notebook-paper {
+    position: relative;
+    background-color: var(--color-paper);
+    background-image:
+      linear-gradient(
+        to right,
+        transparent calc(var(--margin-x) - 1px),
+        var(--paper-rule-red) calc(var(--margin-x) - 1px),
+        var(--paper-rule-red) calc(var(--margin-x) + 1px),
+        transparent calc(var(--margin-x) + 1px)
+      ),
+      repeating-linear-gradient(
+        to bottom,
+        transparent 0,
+        transparent calc(var(--rule-gap) - 1px),
+        var(--paper-rule-blue) calc(var(--rule-gap) - 1px),
+        var(--paper-rule-blue) var(--rule-gap)
+      );
+    background-repeat: no-repeat, repeat;
+    background-position:
+      0 0,
+      0 0;
+  }
+
+  /* Centered content column that clears the red margin line on the left. */
+  .shell {
+    width: 100%;
+    max-width: 64rem;
+    margin-inline: auto;
+    padding-inline: clamp(1.5rem, 5vw, 3rem);
+    padding-left: max(clamp(1.5rem, 5vw, 3rem), calc(var(--margin-x) + 0.75rem));
+  }
+
+  /* Small label/eyebrow above headings. */
+  .eyebrow {
+    font-family: var(--font-display);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    color: var(--color-raspberry-ink);
+  }
+
+  /* The big "bubble" headline - royal blue fill, navy outline, soft drop. */
+  .bubble {
+    font-family: var(--font-display);
+    font-weight: 800;
+    color: var(--color-brand-blue);
+    line-height: 0.95;
+    letter-spacing: 0.005em;
+    -webkit-text-stroke: 0.055em var(--color-brand-blue-ink);
+    paint-order: stroke fill;
+    text-shadow:
+      0 0.035em 0 var(--color-brand-blue-ink),
+      0 0.09em 0.12em rgba(24, 42, 110, 0.25);
+  }
+
+  /* Raspberry chunky callout (e.g. "FOR OUR STUDENTS."). Flat, like the sign. */
+  .callout {
+    font-family: var(--font-display);
+    font-weight: 800;
+    color: var(--color-raspberry);
+    text-transform: uppercase;
+    line-height: 1.05;
+    letter-spacing: 0.005em;
+  }
+
+  /* A torn/taped paper card surface for sections that sit "on top" of the page. */
+  .paper-card {
+    background-color: var(--color-paper-soft);
+    border: 1px solid rgba(44, 46, 53, 0.1);
+    border-radius: 14px;
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.8) inset,
+      0 10px 30px -18px rgba(24, 42, 110, 0.35);
+  }
+
+  /* Accessible text input / textarea. */
+  .field {
+    display: block;
+    width: 100%;
+    background: var(--color-paper-soft);
+    color: var(--color-ink);
+    border: 1.5px solid rgba(44, 46, 53, 0.22);
+    border-radius: 10px;
+    padding: 0.7rem 0.9rem;
+    font: inherit;
+    line-height: 1.4;
+    transition:
+      border-color 150ms ease,
+      box-shadow 150ms ease;
+  }
+  .field::placeholder {
+    color: var(--color-ink-soft);
+    opacity: 0.8;
+  }
+  .field:hover {
+    border-color: rgba(44, 46, 53, 0.38);
+  }
+  .field:focus {
+    outline: none;
+    border-color: var(--color-brand-blue);
+    box-shadow: 0 0 0 3px rgba(39, 72, 200, 0.18);
+  }
+  .field[aria-invalid="true"] {
+    border-color: var(--color-rule-red);
+  }
+  .field[aria-invalid="true"]:focus {
+    box-shadow: 0 0 0 3px rgba(214, 104, 90, 0.22);
+  }
+
+  .field-label {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--color-ink);
+  }
+}
+
+/* -------------------------------------------------------------------------
+   SCROLL REVEAL (pure CSS + IntersectionObserver via [appReveal])
+   Hidden state only applies when JS is active (.js set in index.html) AND the
+   user has not requested reduced motion - so content never gets stuck hidden.
+   ------------------------------------------------------------------------- */
+.js .reveal {
+  opacity: 0;
+  transform: translateY(22px);
+  transition:
+    opacity 600ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 600ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+.js .reveal.reveal--visible {
+  opacity: 1;
+  transform: none;
+  will-change: auto;
+}
+
+/* Optional stagger: add [style.--reveal-delay] or the .reveal-delay-* classes. */
+.reveal {
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .js .reveal,
+  .js .reveal.reveal--visible {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+    will-change: auto !important;
+  }
+}
