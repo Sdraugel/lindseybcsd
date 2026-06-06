@@ -32,7 +32,10 @@ interface Photo {
       >
         @for (photo of photos; track photo.src; let i = $index) {
           <li appReveal [appReveal]="i * 90" class="h-full">
-            <figure class="paper-card h-full p-3" [class]="photo.tilt">
+            <figure
+              class="paper-card mx-auto h-full w-full max-w-80 p-3"
+              [class]="photo.tilt"
+            >
               <div class="aspect-[4/5] overflow-hidden rounded-xl">
                 <img
                   [src]="photo.src"

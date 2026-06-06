@@ -48,8 +48,14 @@ import { RevealDirective } from '../../shared/reveal.directive';
           </div>
         </div>
 
-        <!-- Photo column: after text on mobile, right on desktop -->
-        <div appReveal [appReveal]="120" class="space-y-5">
+        <!-- Photo column: after text on mobile, right on desktop. Capped to the
+             same ~20rem width on mobile (centered) so the photos never balloon
+             to full-bleed; the desktop grid column controls the width at md+. -->
+        <div
+          appReveal
+          [appReveal]="120"
+          class="mx-auto w-full max-w-80 space-y-5 md:max-w-none"
+        >
           <!-- PHOTO: Lindsey headshot (swap src to replace; optimized copies in public/img/). -->
           <figure class="paper-card rotate-1 p-3">
             <div class="aspect-[4/5] overflow-hidden rounded-xl">
