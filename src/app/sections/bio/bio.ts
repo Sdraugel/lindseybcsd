@@ -9,7 +9,7 @@ import { RevealDirective } from '../../shared/reveal.directive';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [RevealDirective],
   template: `
-    <section id="meet" class="shell py-16 md:py-24">
+    <section id="meet" class="shell py-10 md:py-14">
       <div class="grid items-start gap-10 md:grid-cols-[minmax(0,1fr)_20rem]">
         <!-- Text column: first on mobile, left on desktop -->
         <div appReveal>

@@ -17,7 +17,7 @@ interface Photo {
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [RevealDirective],
   template: `
-    <section id="showing-up" class="shell py-16 md:py-24">
+    <section id="showing-up" class="shell py-10 md:py-14">
       <div appReveal class="max-w-2xl">
         <p class="eyebrow">On the trail</p>
         <h2 class="bubble text-4xl md:text-5xl">Showing Up</h2>

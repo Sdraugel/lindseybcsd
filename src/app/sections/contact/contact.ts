@@ -53,7 +53,7 @@ type Frequency = 'once' | 'monthly';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [RevealDirective, ButtonDirective],
   template: `
-    <section id="get-involved" class="shell py-16 md:py-24">
+    <section id="get-involved" class="shell py-10 md:py-14">
       <div appReveal>
         <p class="eyebrow">Join us</p>
         <h2 class="bubble text-4xl md:text-5xl">Get Involved</h2>

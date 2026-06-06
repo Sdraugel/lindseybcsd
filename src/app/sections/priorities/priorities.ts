@@ -9,7 +9,7 @@ import { CheckmarkComponent } from '../../shared/checkmark';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [RevealDirective, CheckmarkComponent],
   template: `
-    <section id="priorities" class="shell py-16 md:py-24">
+    <section id="priorities" class="shell py-10 md:py-14">
       <div appReveal class="max-w-2xl">
         <p class="eyebrow">Priorities</p>
         <h2 class="bubble text-4xl md:text-5xl">What I'll Fight For</h2>

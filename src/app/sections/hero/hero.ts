@@ -13,7 +13,7 @@ import { ButtonDirective } from '../../shared/button.directive';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [RevealDirective, CheckmarkComponent, ButtonDirective],
   template: `
-    <section id="top" class="shell pt-16 md:pt-24 pb-16 md:pb-24">
+    <section id="top" class="shell pt-12 md:pt-16 pb-10 md:pb-14">
       <div appReveal class="text-center">
         <h1 class="bubble text-[clamp(3rem,9vw,8rem)] leading-[1.02]">
           DRAUGEL
