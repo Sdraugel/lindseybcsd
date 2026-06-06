@@ -1,8 +1,8 @@
 // Hero section - the campaign's visual centerpiece, echoing the notebook-paper
 // yard sign: a big royal-blue bubble name, raspberry sub-headline, and the
-// signature hand-drawn checkbox lines. Full-width and text-forward on every
-// size; the headline scales fluidly with the viewport. (The headshot lives in
-// the Meet Lindsey section.)
+// signature hand-drawn checkbox lines. Full-width, centered, and text-forward on
+// every size; the headline scales fluidly with the viewport. (The headshot lives
+// in the Meet Lindsey section.)
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RevealDirective } from '../../shared/reveal.directive';
 import { CheckmarkComponent } from '../../shared/checkmark';
@@ -14,9 +14,9 @@ import { ButtonDirective } from '../../shared/button.directive';
   imports: [RevealDirective, CheckmarkComponent, ButtonDirective],
   template: `
     <section id="top" class="shell pt-28 md:pt-36 pb-16 md:pb-24">
-      <div appReveal>
+      <div appReveal class="text-center">
         <h1 class="bubble text-[clamp(3rem,9vw,8rem)] leading-[1.02]">
-          LINDSEY DRAUGEL
+          DRAUGEL
         </h1>
 
         <p
@@ -26,7 +26,7 @@ import { ButtonDirective } from '../../shared/button.directive';
         </p>
 
         <ul
-          class="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-12"
+          class="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-center sm:gap-x-12"
         >
           <li class="flex items-center gap-3">
             <app-check [size]="48" [strokeWidth]="3.2" />
@@ -38,9 +38,9 @@ import { ButtonDirective } from '../../shared/button.directive';
           </li>
         </ul>
 
-        <div class="mt-10 flex flex-wrap gap-4">
-          <a appButton href="#get-involved">Get Involved</a>
+        <div class="mt-10 flex flex-wrap justify-center gap-4">
           <a appButton variant="ghost" href="#meet">Meet Lindsey</a>
+          <a appButton href="#get-involved">Get Involved</a>
         </div>
       </div>
     </section>
