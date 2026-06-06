@@ -1,146 +1,244 @@
 /**
- * Get Involved / Contact section.
+ * Get Involved / Donate section.
  *
- * A reactive contact form on the notebook-paper theme. There is NO real backend:
- * a valid submit opens the visitor's email client via a `mailto:` link
- * (see `onSubmit`). The TODO(backend) block below shows exactly where to drop in
- * a real Formspree / EmailJS POST instead.
+ * Online giving runs through Anedot (https://anedot.com). The committee's
+ * Anedot account is not finished yet, so everything below is BUILT AND READY
+ * but gated behind a single constant:
+ *
+ *   ┌──────────────────────────────────────────────────────────────────────┐
+ *   │  TODO(anedot): paste the live hosted donation-page "Share URL" into    │
+ *   │  ANEDOT_URL below (e.g. 'https://secure.anedot.com/<committee>/donate').│
+ *   │  The moment it is non-empty, the amount tiles go live and the Donate   │
+ *   │  button links out (new tab) with the chosen amount + frequency         │
+ *   │  pre-filled. Until then the UI shows a friendly "opening soon" state   │
+ *   │  with an email fallback, so nothing links to a broken page.            │
+ *   └──────────────────────────────────────────────────────────────────────┘
+ *
+ * Pre-fill via Anedot URL parameters (confirmed in Anedot's docs):
+ *   ?amount=100          whole dollars, no cents
+ *   &frequency=monthly   recurring commitment
+ * Docs: https://help.anedot.com/knowledge/url-parameter
+ *
+ * Prefer an on-page form instead of linking out? Anedot also offers an iframe
+ * "Embed Code". Drop that <iframe> in place of the amount tiles + Donate button
+ * (Anedot recommends the hosted Share URL over the iframe, which is why the
+ * link-out approach is wired up here).
  */
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import {
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  signal,
+} from '@angular/core';
 
 import { RevealDirective } from '../../shared/reveal.directive';
-import { CheckmarkComponent } from '../../shared/checkmark';
 import { ButtonDirective } from '../../shared/button.directive';
 
 const CONTACT_EMAIL = 'draugelfordistrict2@gmail.com';
 
+/**
+ * Live Anedot hosted donation-page URL. EMPTY = donations not open yet (the UI
+ * shows an "opening soon" state). See the TODO(anedot) block at the top of this
+ * file. Example once ready: 'https://secure.anedot.com/draugel-d2/donate'
+ */
+const ANEDOT_URL = '';
+
+/** Suggested one-tap contribution amounts, in whole dollars. */
+const PRESET_AMOUNTS = [25, 50, 100, 250] as const;
+
+type Frequency = 'once' | 'monthly';
+
 @Component({
   selector: 'app-contact',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    ReactiveFormsModule,
-    RevealDirective,
-    CheckmarkComponent,
-    ButtonDirective,
-  ],
+  imports: [RevealDirective, ButtonDirective],
   template: `
     <section id="get-involved" class="shell py-16 md:py-24">
       <div appReveal class="max-w-2xl">
         <p class="eyebrow">Join us</p>
         <h2 class="bubble text-4xl md:text-5xl">Get Involved</h2>
         <p class="mt-4 text-lg text-ink">
-          Want to help, host a sign, or just stay in the loop? Send a note.
-          We'd love to hear from you.
+          Grassroots campaigns run on grassroots support. Chip in to help us
+          reach every voter in District 2 - every dollar goes straight to
+          signs, mailers, and getting Lindsey's message out.
         </p>
       </div>
 
       <div class="mt-10 grid gap-8 lg:grid-cols-5 lg:items-start">
-        <!-- Contact form -->
-        <form
-          appReveal
-          [appReveal]="80"
-          class="paper-card p-6 md:p-8 lg:col-span-3"
-          novalidate
-          (ngSubmit)="onSubmit()"
-          [formGroup]="form"
-        >
-          <!-- Name -->
-          <div>
-            <label class="field-label" for="name">Name</label>
-            <input
-              class="field"
-              id="name"
-              type="text"
-              autocomplete="name"
-              formControlName="name"
-              required
-              [attr.aria-invalid]="showError('name') ? 'true' : null"
-              [attr.aria-describedby]="showError('name') ? 'name-error' : null"
-            />
-            @if (showError('name')) {
-              <p id="name-error" role="alert" class="mt-1.5 text-sm text-raspberry-ink">
-                Please enter your name.
-              </p>
+        <!-- Donation card -->
+        <div appReveal [appReveal]="80" class="paper-card p-6 md:p-8 lg:col-span-3">
+          <div class="flex flex-wrap items-center gap-3">
+            <h3 class="bubble text-2xl">Chip In</h3>
+            @if (!donationsOpen()) {
+              <span
+                class="inline-flex items-center rounded-full bg-raspberry-soft px-3 py-1 text-xs font-display font-bold uppercase tracking-wide text-raspberry-ink"
+              >
+                Opening soon
+              </span>
             }
           </div>
+          <p class="mt-3 text-ink">
+            Make a one-time gift or pitch in monthly. Choose an amount to get
+            started.
+          </p>
 
-          <!-- Email -->
-          <div class="mt-5">
-            <label class="field-label" for="email">Email</label>
-            <input
-              class="field"
-              id="email"
-              type="email"
-              autocomplete="email"
-              formControlName="email"
-              required
-              [attr.aria-invalid]="showError('email') ? 'true' : null"
-              [attr.aria-describedby]="showError('email') ? 'email-error' : null"
-            />
-            @if (showError('email')) {
-              <p id="email-error" role="alert" class="mt-1.5 text-sm text-raspberry-ink">
-                @if (form.controls.email.hasError('required')) {
-                  Please enter your email.
+          <!-- Frequency: one-time vs monthly -->
+          <div
+            class="mt-6 inline-flex rounded-full bg-brand-blue/10 p-1"
+            role="group"
+            aria-label="Donation frequency"
+          >
+            <button
+              type="button"
+              class="rounded-full px-4 py-2 text-sm font-display font-bold transition"
+              [class]="freqClass(frequency() === 'once')"
+              [attr.aria-pressed]="frequency() === 'once'"
+              (click)="frequency.set('once')"
+            >
+              One-time
+            </button>
+            <button
+              type="button"
+              class="rounded-full px-4 py-2 text-sm font-display font-bold transition"
+              [class]="freqClass(frequency() === 'monthly')"
+              [attr.aria-pressed]="frequency() === 'monthly'"
+              (click)="frequency.set('monthly')"
+            >
+              Monthly
+            </button>
+          </div>
+
+          <!-- Suggested amounts -->
+          <div
+            class="mt-5 flex flex-wrap gap-2.5"
+            role="group"
+            aria-label="Donation amount"
+          >
+            @for (amt of presets; track amt) {
+              <button
+                type="button"
+                [class]="chipClass(selected() === amt)"
+                [attr.aria-pressed]="selected() === amt"
+                (click)="selectPreset(amt)"
+              >
+                {{ '$' + amt }}{{ frequency() === 'monthly' ? '/mo' : '' }}
+              </button>
+            }
+            <button
+              type="button"
+              [class]="chipClass(selected() === 'other')"
+              [attr.aria-pressed]="selected() === 'other'"
+              (click)="selectOther()"
+            >
+              Other
+            </button>
+          </div>
+
+          <!-- Custom amount (only when "Other" is chosen) -->
+          @if (selected() === 'other') {
+            <div class="mt-4 max-w-[14rem]">
+              <label class="field-label" for="custom-amount">Other amount</label>
+              <div class="relative mt-1.5">
+                <span
+                  class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 font-display font-bold text-ink-soft"
+                  aria-hidden="true"
+                  >$</span
+                >
+                <input
+                  class="field pl-7"
+                  id="custom-amount"
+                  type="number"
+                  inputmode="numeric"
+                  min="1"
+                  step="1"
+                  placeholder="50"
+                  [value]="customAmount()"
+                  (input)="setCustom($event)"
+                />
+              </div>
+            </div>
+          }
+
+          <!-- Donate CTA -->
+          <div class="mt-7">
+            @if (canDonate()) {
+              <a
+                appButton
+                [href]="donateHref()"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Donate {{ amountLabel()
+                }}{{ frequency() === 'monthly' ? '/mo' : '' }}
+              </a>
+            } @else {
+              <button appButton type="button" disabled>
+                @if (donationsOpen()) {
+                  Enter an amount
                 } @else {
-                  Please enter a valid email address.
+                  Donate {{ amountLabel() }}
                 }
-              </p>
+              </button>
             }
           </div>
 
-          <!-- Message (optional) -->
-          <div class="mt-5">
-            <label class="field-label" for="message">
-              Message <span class="text-ink-soft font-normal">(optional)</span>
-            </label>
-            <textarea
-              class="field"
-              id="message"
-              rows="4"
-              formControlName="message"
-            ></textarea>
-          </div>
-
-          <div class="mt-6 flex flex-wrap items-center gap-4">
-            <button appButton type="submit">Send message</button>
-
-            @if (sent()) {
-              <p role="status" class="flex items-center gap-2 text-ink font-display font-bold">
-                <app-check [size]="28" />
-                Thanks! Your email client should open. We'll be in touch soon.
-              </p>
-            }
-          </div>
+          @if (!donationsOpen()) {
+            <p class="mt-4 text-sm text-ink-soft">
+              Secure online giving is opening soon. To contribute today, email
+              us at
+              <a
+                class="font-display font-bold text-brand-blue underline decoration-2 underline-offset-2 hover:text-brand-blue-soft break-words"
+                [href]="'mailto:' + email"
+                >{{ email }}</a
+              >.
+            </p>
+          } @else {
+            <p class="mt-4 flex items-center gap-2 text-sm text-ink-soft">
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                aria-hidden="true"
+              >
+                <rect
+                  x="5"
+                  y="11"
+                  width="14"
+                  height="9"
+                  rx="2"
+                  stroke="currentColor"
+                  stroke-width="2"
+                />
+                <path
+                  d="M8 11V8a4 4 0 0 1 8 0v3"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                />
+              </svg>
+              Secure giving, processed by Anedot.
+            </p>
+          }
 
           <!--
-            TODO(backend): replace the mailto fallback in onSubmit() with a real
-            POST to a form service so submissions arrive without opening an email
-            client. No backend is wired up yet. Example (Formspree):
-
-            const res = await fetch('https://formspree.io/f/YOUR_FORM_ID', {
-              method: 'POST',
-              headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
-              body: JSON.stringify(this.form.getRawValue()),
-            });
-            if (res.ok) { this.sent.set(true); this.form.reset(); }
-
-            Or EmailJS:
-            // import emailjs from '@emailjs/browser';
-            // await emailjs.send('SERVICE_ID', 'TEMPLATE_ID', this.form.getRawValue(), 'PUBLIC_KEY');
+            TODO(legal): Add the required campaign-finance contribution
+            disclaimer here (e.g. "Contributions are not tax deductible.",
+            applicable SC contribution limits, and the employer/occupation
+            collection notice for larger gifts). Confirm exact wording with the
+            committee's compliance contact before publishing.
           -->
-        </form>
+          <p class="mt-2 text-xs text-ink-soft">
+            [PLACEHOLDER: contribution disclaimer / limits - confirm wording]
+          </p>
+        </div>
 
         <!-- Contact details + socials -->
         <aside appReveal [appReveal]="160" class="paper-card p-6 md:p-8 lg:col-span-2">
           <h3 class="bubble text-2xl">Reach Us Directly</h3>
           <p class="mt-3 text-ink">
-            Prefer email? Write to us anytime at:
+            Want to volunteer, host a yard sign, or just stay in the loop? Email
+            us anytime - we'd love to hear from you.
           </p>
           <p class="mt-2">
             <a
@@ -180,22 +278,56 @@ export class Contact {
   /** Visible contact email address. */
   protected readonly email = CONTACT_EMAIL;
 
-  /** Set true once the user has pressed "Send message". Drives validation display. */
-  protected readonly submitted = signal(false);
+  /** Suggested contribution amounts (whole dollars). */
+  protected readonly presets = PRESET_AMOUNTS;
 
-  /** Set true after a valid submit triggers the mailto handoff. */
-  protected readonly sent = signal(false);
+  /** Currently selected amount: a preset (dollars) or 'other' (custom input). */
+  protected readonly selected = signal<number | 'other'>(50);
 
-  protected readonly form = new FormGroup({
-    name: new FormControl('', {
-      nonNullable: true,
-      validators: [Validators.required],
-    }),
-    email: new FormControl('', {
-      nonNullable: true,
-      validators: [Validators.required, Validators.email],
-    }),
-    message: new FormControl('', { nonNullable: true }),
+  /** Raw value of the custom amount input (string straight from the field). */
+  protected readonly customAmount = signal('');
+
+  /** One-time vs. recurring monthly gift. */
+  protected readonly frequency = signal<Frequency>('once');
+
+  /**
+   * Whether online giving is live. False until ANEDOT_URL is filled in - see
+   * the TODO(anedot) block at the top of this file.
+   */
+  protected readonly donationsOpen = computed(() => ANEDOT_URL.length > 0);
+
+  /** The resolved contribution amount in whole dollars (0 = not valid yet). */
+  protected readonly effectiveAmount = computed<number>(() => {
+    const sel = this.selected();
+    if (sel !== 'other') return sel;
+    const n = Math.floor(Number(this.customAmount()));
+    return Number.isFinite(n) && n > 0 ? n : 0;
+  });
+
+  /** "$50" style label for the chosen amount, or '' when none is valid. */
+  protected readonly amountLabel = computed(() => {
+    const amount = this.effectiveAmount();
+    return amount > 0 ? `$${amount}` : '';
+  });
+
+  /** Giving is live AND we have a valid amount to send. */
+  protected readonly canDonate = computed(
+    () => this.donationsOpen() && this.effectiveAmount() > 0,
+  );
+
+  /**
+   * Anedot hosted-page URL with the chosen amount + frequency pre-filled.
+   * Null while donations are closed (ANEDOT_URL empty).
+   */
+  protected readonly donateHref = computed<string | null>(() => {
+    if (!ANEDOT_URL) return null;
+    const url = new URL(ANEDOT_URL);
+    const amount = this.effectiveAmount();
+    if (amount > 0) url.searchParams.set('amount', String(amount));
+    if (this.frequency() === 'monthly') {
+      url.searchParams.set('frequency', 'monthly');
+    }
+    return url.toString();
   });
 
   /**
@@ -212,34 +344,32 @@ export class Contact {
     },
   ];
 
-  /** Show a field's error only after a submit attempt or once it's been touched. */
-  protected showError(name: 'name' | 'email'): boolean {
-    const control = this.form.controls[name];
-    return control.invalid && (this.submitted() || control.touched);
+  protected selectPreset(amount: number): void {
+    this.selected.set(amount);
   }
 
-  protected onSubmit(): void {
-    this.submitted.set(true);
+  protected selectOther(): void {
+    this.selected.set('other');
+  }
 
-    if (this.form.invalid) {
-      this.form.markAllAsTouched();
-      return;
-    }
+  protected setCustom(event: Event): void {
+    this.customAmount.set((event.target as HTMLInputElement).value);
+  }
 
-    const { name, email, message } = this.form.getRawValue();
+  /** Classes for an amount chip (filled when active, tinted outline otherwise). */
+  protected chipClass(active: boolean): string {
+    return [
+      'font-display font-bold rounded-full px-4 py-2.5 text-base cursor-pointer transition',
+      active
+        ? 'bg-brand-blue text-white shadow-[0_10px_22px_-12px_rgba(24,42,110,0.75)]'
+        : 'bg-brand-blue/10 text-brand-blue ring-1 ring-inset ring-brand-blue/25 hover:bg-brand-blue/20',
+    ].join(' ');
+  }
 
-    // TODO(backend): replace mailto fallback with:
-    // fetch('https://formspree.io/f/YOUR_FORM_ID', { method:'POST', ... })
-    // (see the full commented example in the template above).
-    const subject = `Campaign inquiry from ${name}`;
-    const body =
-      `${message || '(no message)'}\n\n` + `Sent by ${name} (${email})`;
-    const mailto =
-      `mailto:${CONTACT_EMAIL}` +
-      `?subject=${encodeURIComponent(subject)}` +
-      `&body=${encodeURIComponent(body)}`;
-
-    window.location.href = mailto;
-    this.sent.set(true);
+  /** Classes for a frequency toggle (segmented control pill). */
+  protected freqClass(active: boolean): string {
+    return active
+      ? 'bg-paper-soft text-brand-blue shadow-[0_2px_8px_-4px_rgba(24,42,110,0.5)]'
+      : 'text-brand-blue/80 hover:text-brand-blue';
   }
 }

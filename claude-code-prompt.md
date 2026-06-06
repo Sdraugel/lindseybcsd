@@ -21,7 +21,7 @@ The campaign signs use a lined-notebook-paper aesthetic. Match it, but make it f
 ## Page sections (in order)
 
 ### 1. Hero
-- Big bubble-font headline: **LINDSEY DRAUGEL**
+- Big bubble-font headline: **DRAUGEL**
 - Sub-headline in raspberry: **For School Board · District 2**
 - Two hand-drawn-checkmark lines: "✔ For our students."  "✔ For our teachers."
 - Primary CTA button: **Get Involved** (scrolls to contact). Optional secondary: **Meet Lindsey** (scrolls to bio).
