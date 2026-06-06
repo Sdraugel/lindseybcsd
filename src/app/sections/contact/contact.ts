@@ -54,7 +54,7 @@ type Frequency = 'once' | 'monthly';
   imports: [RevealDirective, ButtonDirective],
   template: `
     <section id="get-involved" class="shell py-16 md:py-24">
-      <div appReveal class="max-w-2xl">
+      <div appReveal>
         <p class="eyebrow">Join us</p>
         <h2 class="bubble text-4xl md:text-5xl">Get Involved</h2>
         <p class="mt-4 text-lg text-ink">
@@ -64,9 +64,9 @@ type Frequency = 'once' | 'monthly';
         </p>
       </div>
 
-      <div class="mt-10 grid gap-8 lg:grid-cols-5 lg:items-start">
+      <div class="mt-10 grid gap-8 lg:grid-cols-2">
         <!-- Donation card -->
-        <div appReveal [appReveal]="80" class="paper-card p-6 md:p-8 lg:col-span-3">
+        <div appReveal [appReveal]="80" class="paper-card p-6 md:p-8">
           <div class="flex flex-wrap items-center gap-3">
             <h3 class="bubble text-2xl">Chip In</h3>
             @if (!donationsOpen()) {
@@ -222,19 +222,16 @@ type Frequency = 'once' | 'monthly';
           }
 
           <!--
-            TODO(legal): Add the required campaign-finance contribution
-            disclaimer here (e.g. "Contributions are not tax deductible.",
-            applicable SC contribution limits, and the employer/occupation
-            collection notice for larger gifts). Confirm exact wording with the
-            committee's compliance contact before publishing.
+            TODO(legal): A campaign-finance contribution disclaimer likely
+            belongs here once giving is live (e.g. "Contributions are not tax
+            deductible.", applicable SC contribution limits, and the
+            employer/occupation notice for larger gifts). Confirm wording with
+            the committee's compliance contact, then add a <p> below.
           -->
-          <p class="mt-2 text-xs text-ink-soft">
-            [PLACEHOLDER: contribution disclaimer / limits - confirm wording]
-          </p>
         </div>
 
         <!-- Contact details + socials -->
-        <aside appReveal [appReveal]="160" class="paper-card p-6 md:p-8 lg:col-span-2">
+        <aside appReveal [appReveal]="160" class="paper-card p-6 md:p-8">
           <h3 class="bubble text-2xl">Reach Us Directly</h3>
           <p class="mt-3 text-ink">
             Want to volunteer, host a yard sign, or just stay in the loop? Email

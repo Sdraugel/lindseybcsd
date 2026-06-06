@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { PaperComponent } from './shared/paper';
-import { Nav } from './sections/nav/nav';
 import { Hero } from './sections/hero/hero';
 import { Bio } from './sections/bio/bio';
 import { Experience } from './sections/experience/experience';
@@ -14,7 +13,6 @@ import { SiteFooter } from './sections/footer/footer';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     PaperComponent,
-    Nav,
     Hero,
     Bio,
     Experience,

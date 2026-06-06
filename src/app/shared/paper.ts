@@ -7,7 +7,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
  *
  * Usage:
  *   <app-paper>
- *     <app-nav /> <main>…</main> <app-site-footer />
+ *     <main>…</main> <app-site-footer />
  *   </app-paper>
  */
 @Component({

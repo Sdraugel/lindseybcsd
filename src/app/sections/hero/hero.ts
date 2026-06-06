@@ -13,7 +13,7 @@ import { ButtonDirective } from '../../shared/button.directive';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [RevealDirective, CheckmarkComponent, ButtonDirective],
   template: `
-    <section id="top" class="shell pt-28 md:pt-36 pb-16 md:pb-24">
+    <section id="top" class="shell pt-16 md:pt-24 pb-16 md:pb-24">
       <div appReveal class="text-center">
         <h1 class="bubble text-[clamp(3rem,9vw,8rem)] leading-[1.02]">
           DRAUGEL
@@ -38,8 +38,10 @@ import { ButtonDirective } from '../../shared/button.directive';
           </li>
         </ul>
 
-        <div class="mt-10 flex flex-wrap justify-center gap-4">
+        <div class="mt-10 flex flex-wrap justify-center gap-3 sm:gap-4">
           <a appButton variant="ghost" href="#meet">Meet Lindsey</a>
+          <a appButton variant="ghost" href="#experience">Experience</a>
+          <a appButton variant="ghost" href="#priorities">Priorities</a>
           <a appButton href="#get-involved">Get Involved</a>
         </div>
       </div>
