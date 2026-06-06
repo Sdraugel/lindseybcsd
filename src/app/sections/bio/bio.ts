@@ -1,5 +1,6 @@
-// Meet Lindsey (bio) section - two-column intro: candidate story + framed photo
-// placeholder. Notebook-paper theme; transparent section, OnPush, zoneless.
+// Meet Lindsey (bio) section - candidate story with a family photo (the
+// headshot lives in the hero). Notebook-paper theme; transparent section,
+// OnPush, zoneless. Two columns on desktop, single column on mobile (text first).
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RevealDirective } from '../../shared/reveal.directive';
 
@@ -48,22 +49,9 @@ import { RevealDirective } from '../../shared/reveal.directive';
         </div>
 
         <!-- Photo column: after text on mobile, right on desktop -->
-        <div appReveal [appReveal]="120" class="space-y-5">
-          <!-- PHOTO: Lindsey headshot - swap the src to replace (optimized copies live in public/img/). -->
-          <figure class="paper-card rotate-1 p-3">
-            <div class="aspect-[4/5] overflow-hidden rounded-xl">
-              <img
-                src="img/lindsey-headshot.jpg"
-                alt="Lindsey Draugel"
-                loading="lazy"
-                decoding="async"
-                class="h-full w-full object-cover object-center"
-              />
-            </div>
-          </figure>
-
-          <!-- Family photo supports the "mom of three boys" story. -->
-          <figure class="paper-card -rotate-1 p-3">
+        <div appReveal [appReveal]="120">
+          <!-- Family photo supports the "mom of three boys" story. Swap src to replace (optimized copies in public/img/). -->
+          <figure class="paper-card -rotate-1 p-3 lg:mt-4">
             <div class="aspect-[4/5] overflow-hidden rounded-xl">
               <img
                 src="img/family.jpg"

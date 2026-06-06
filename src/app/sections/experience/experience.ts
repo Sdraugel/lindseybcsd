@@ -16,7 +16,7 @@ import { CheckmarkComponent } from '../../shared/checkmark';
         <h2 class="bubble text-4xl md:text-5xl">Experience &amp; Background</h2>
       </div>
 
-      <ul class="mt-12 md:mt-16 max-w-3xl flex flex-col gap-5 md:gap-6">
+      <ul class="mt-12 md:mt-16 grid gap-5 md:gap-6 lg:grid-cols-2">
         @for (item of items; track item.html; let i = $index) {
           <li
             appReveal
