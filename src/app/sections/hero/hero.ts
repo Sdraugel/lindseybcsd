@@ -48,8 +48,8 @@ import { ButtonDirective } from '../../shared/button.directive';
         </div>
 
         <!-- PHOTO: Lindsey headshot (swap src to replace; optimized copies in public/img/).
-             Shown only on large screens so the mobile/tablet hero stays text-forward. -->
-        <div appReveal [appReveal]="140" class="hidden lg:block">
+             Centered under the text on phones/tablets; fills the right column on large screens. -->
+        <div appReveal [appReveal]="140" class="mx-auto w-full max-w-sm lg:mx-0 lg:max-w-none">
           <figure class="paper-card rotate-2 p-3">
             <div class="aspect-[4/5] overflow-hidden rounded-xl">
               <img
