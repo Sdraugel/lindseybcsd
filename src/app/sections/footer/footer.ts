@@ -18,6 +18,15 @@ import { CheckmarkComponent } from '../../shared/checkmark';
             <span class="font-display font-bold text-raspberry-ink">District 2</span>
           </p>
 
+          <!-- Site links -->
+          <p>
+            <a
+              class="font-display font-bold text-brand-blue underline decoration-2 underline-offset-2 hover:text-brand-blue-soft"
+              href="events.html"
+              >Upcoming Events</a
+            >
+          </p>
+
           <div class="flex flex-col gap-2">
             <!-- TODO(legal): Confirm the exact SC campaign-finance disclaimer wording required and the registered committee name. SC law may mandate specific "Paid for by ..." text. Verify before publishing. -->
             <p>
