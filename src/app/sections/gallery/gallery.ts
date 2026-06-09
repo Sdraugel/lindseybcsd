@@ -28,7 +28,7 @@ interface Photo {
       </div>
 
       <ul
-        class="mt-10 mx-auto grid max-w-2xl list-none grid-cols-1 gap-6 p-0 sm:grid-cols-2"
+        class="mt-10 mx-auto grid max-w-2xl list-none grid-cols-2 gap-4 p-0 sm:gap-6"
       >
         @for (photo of photos; track photo.src; let i = $index) {
           <li appReveal [appReveal]="i * 90" class="h-full">
