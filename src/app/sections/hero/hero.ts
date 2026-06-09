@@ -38,7 +38,9 @@ import { ButtonDirective } from '../../shared/button.directive';
           </li>
         </ul>
 
-        <div class="mt-10 flex flex-wrap justify-center gap-3 sm:gap-4">
+        <div
+          class="mt-10 hidden flex-wrap justify-center gap-3 sm:gap-4 md:flex"
+        >
           <a appButton href="#get-involved">Get Involved</a>
           <a appButton variant="ghost" href="#meet">Meet Lindsey</a>
           <a appButton variant="ghost" href="#experience">Experience</a>
