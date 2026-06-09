@@ -22,7 +22,7 @@ import { CheckmarkComponent } from '../../shared/checkmark';
           <p>
             <a
               class="font-display font-bold text-brand-blue underline decoration-2 underline-offset-2 hover:text-brand-blue-soft"
-              href="events.html"
+              href="#events"
               >Upcoming Events</a
             >
           </p>
