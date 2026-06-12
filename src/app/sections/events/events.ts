@@ -7,8 +7,7 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { RevealDirective } from '../../shared/reveal.directive';
 
-const CALENDAR_ID =
-  'e208260556cd9dfab5cda9336df9950f0fc972a2815eef0ef71cd87f54bcb3d7@group.calendar.google.com';
+const CALENDAR_ID = 'draugelfordistrict2@gmail.com';
 
 @Component({
   selector: 'app-events',
