@@ -1,62 +1,41 @@
-// Experience / Background section: vertical timeline of Lindsey's career and
-// community service, each step accented with the hand-drawn checkbox motif.
-// Zoneless + OnPush; inline template; scroll-reveal with a small stagger.
+// Experience: "My Experience" and "Point of View" as two cards on the
+// notebook-paper theme. OnPush, zoneless; scroll-reveal with a small stagger.
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RevealDirective } from '../../shared/reveal.directive';
-import { CheckmarkComponent } from '../../shared/checkmark';
 
 @Component({
   selector: 'app-experience',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RevealDirective, CheckmarkComponent],
+  imports: [RevealDirective],
   template: `
     <section id="experience" class="shell py-10 md:py-14">
-      <div appReveal class="max-w-2xl">
-        <p class="eyebrow">Experience</p>
-        <h2 class="bubble text-4xl md:text-5xl">Experience &amp; Background</h2>
-      </div>
+      <div class="grid gap-6 md:grid-cols-2 md:items-start md:gap-8">
+        <article appReveal class="paper-card p-6 md:p-8">
+          <p class="eyebrow">Background</p>
+          <h2 class="bubble text-3xl md:text-4xl">My Experience</h2>
+          <p class="mt-4 font-body leading-relaxed text-ink">
+            With a background of over 20 years in childcare that started as a
+            teacher in a classroom, to building and running a highly successful
+            preschool program from the ground up, my experience has proven that
+            developmentally appropriate practices work towards a student's
+            success. I know what it looks like when a school environment works
+            for kids, and I have seen what it looks like when it does not.
+          </p>
+        </article>
 
-      <ul class="mt-12 md:mt-16 grid gap-5 md:gap-6 lg:grid-cols-2">
-        @for (item of items; track item.html; let i = $index) {
-          <li
-            appReveal
-            [appReveal]="i * 80"
-            class="paper-card flex items-start gap-4 p-5 md:p-6"
-          >
-            <span class="shrink-0 mt-0.5" aria-hidden="true">
-              <app-check [size]="34" />
-            </span>
-            <p
-              class="text-ink leading-relaxed text-base md:text-lg [&_strong]:text-brand-blue"
-              [innerHTML]="item.html"
-            ></p>
-          </li>
-        }
-      </ul>
+        <article appReveal [appReveal]="100" class="paper-card p-6 md:p-8">
+          <p class="eyebrow">Why I'm running</p>
+          <h2 class="bubble text-3xl md:text-4xl">Point of View</h2>
+          <p class="mt-4 font-body leading-relaxed text-ink">
+            After many discussions with teachers, parents, and community members,
+            I began to attend the Berkeley County School District board meetings
+            for the purpose of asking hard questions and advocating for students,
+            teachers and families who deserve a voice. I am running for the
+            District 2 school board seat to be your voice in that room.
+          </p>
+        </article>
+      </div>
     </section>
   `,
 })
-export class Experience {
-  protected readonly items = [
-    {
-      html:
-        '<strong>20+ years in early childhood education &amp; care</strong>: started as a teacher across every age group (6 weeks to preK).',
-    },
-    {
-      html:
-        '<strong>Assistant Director</strong> at Trident Kids Academy and Coastal Kids Academy.',
-    },
-    {
-      html:
-        "<strong>Built &amp; ran the preschool program</strong> at Cainhoy Children's Academy (2019 to 2022). Won Charleston's Choice Award for Childcare/Daycare in <strong>2020 and 2021</strong>.",
-    },
-    {
-      html:
-        '<strong>PSE PTA:</strong> 4 years volunteering; 3 years (going on 4th) on the board: Teacher Appreciation co-chair (2 yrs), Events chair + Teacher Appreciation committee (1 yr), Events chair again next year.',
-    },
-    {
-      html:
-        '<strong>Currently:</strong> Administrative Assistant at Happy Hearts Therapy.',
-    },
-  ];
-}
+export class Experience {}
