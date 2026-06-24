@@ -18,7 +18,7 @@ import { ButtonDirective } from '../../shared/button.directive';
         <!-- Name + tagline share a shrink-to-fit box so the tagline can be
              justified across the exact width of DRAUGEL at any screen size. -->
         <div class="inline-block">
-          <h1 class="bubble text-[clamp(3rem,9vw,8rem)] leading-[1]">
+          <h1 class="bubble text-[clamp(4.5rem,14vw,8rem)] leading-[1]">
             DRAUGEL
           </h1>
           <p
@@ -29,15 +29,29 @@ import { ButtonDirective } from '../../shared/button.directive';
         </div>
 
         <ul
-          class="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-center sm:gap-x-12"
+          class="mt-8 flex flex-wrap items-center justify-center gap-x-2 gap-y-2 sm:gap-x-12"
         >
-          <li class="flex items-center gap-3">
-            <app-check [size]="48" [strokeWidth]="3.2" />
-            <span class="callout text-2xl md:text-3xl">For our students.</span>
+          <li class="flex items-center gap-1 sm:gap-3">
+            <app-check class="sm:hidden" [size]="18" [strokeWidth]="4" />
+            <app-check
+              class="hidden sm:inline-block"
+              [size]="48"
+              [strokeWidth]="3.2"
+            />
+            <span class="callout text-xs sm:text-2xl md:text-3xl"
+              >For our students.</span
+            >
           </li>
-          <li class="flex items-center gap-3">
-            <app-check [size]="48" [strokeWidth]="3.2" />
-            <span class="callout text-2xl md:text-3xl">For our teachers.</span>
+          <li class="flex items-center gap-1 sm:gap-3">
+            <app-check class="sm:hidden" [size]="18" [strokeWidth]="4" />
+            <app-check
+              class="hidden sm:inline-block"
+              [size]="48"
+              [strokeWidth]="3.2"
+            />
+            <span class="callout text-xs sm:text-2xl md:text-3xl"
+              >For our teachers.</span
+            >
           </li>
         </ul>
 

@@ -48,7 +48,7 @@
   --paper-rule-blue: rgba(122, 167, 214, 0.34);
   --paper-rule-red: rgba(214, 104, 90, 0.5);
   --rule-gap: 2rem; /* spacing between horizontal ruled lines */
-  --rule-offset: 4px; /* shifts each section's lines so headings sit on a line */
+  --rule-offset: 16px; /* shifts each section's lines so headings sit on a line */
   --margin-x: 1.75rem; /* x-offset of the red vertical margin line */
   --nav-h: 4rem; /* sticky header height (for scroll-margin) */
 }
@@ -56,7 +56,7 @@
 @media (min-width: 768px) {
   :root {
     --rule-gap: 2.25rem;
-    --rule-offset: 16px;
+    --rule-offset: 32px;
     --margin-x: 4.5rem;
     --nav-h: 4.5rem;
   }

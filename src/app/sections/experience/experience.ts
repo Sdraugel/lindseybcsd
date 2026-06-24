@@ -14,7 +14,6 @@ import { RevealDirective } from '../../shared/reveal.directive';
         class="grid grid-cols-[minmax(0,1fr)_7rem] items-start gap-4 sm:grid-cols-[minmax(0,1fr)_11rem] sm:gap-6 md:grid-cols-[minmax(0,1fr)_20rem] md:gap-10"
       >
         <div appReveal>
-          <p class="eyebrow">Background</p>
           <h2 class="bubble text-4xl md:text-5xl">Experience</h2>
           <p class="mt-5 max-w-prose font-body text-ink">
             With a background of over 20 years in childcare that started as a
@@ -28,7 +27,7 @@ import { RevealDirective } from '../../shared/reveal.directive';
 
         <!-- PHOTO: add an experience photo here (replace the placeholder with an
              <img src="img/..."> like the other sections). -->
-        <div appReveal [appReveal]="120">
+        <div appReveal [appReveal]="120" class="self-center">
           <figure class="paper-card rotate-1 p-2 md:p-3">
             <div
               class="flex aspect-[4/5] items-center justify-center rounded-lg border-2 border-dashed border-ink-soft/30 bg-paper/50 md:rounded-xl"
@@ -50,7 +49,6 @@ import { RevealDirective } from '../../shared/reveal.directive';
         class="grid grid-cols-[minmax(0,1fr)_7rem] items-start gap-4 sm:grid-cols-[minmax(0,1fr)_11rem] sm:gap-6 md:grid-cols-[minmax(0,1fr)_20rem] md:gap-10"
       >
         <div appReveal>
-          <p class="eyebrow">Why I'm running</p>
           <h2 class="bubble text-4xl md:text-5xl">Point of View</h2>
           <p class="mt-5 max-w-prose font-body text-ink">
             After many discussions with teachers, parents, and community members,
@@ -61,7 +59,7 @@ import { RevealDirective } from '../../shared/reveal.directive';
           </p>
         </div>
 
-        <div appReveal [appReveal]="120">
+        <div appReveal [appReveal]="120" class="self-center">
           <figure class="paper-card -rotate-1 p-2 md:p-3">
             <div class="aspect-[4/5] overflow-hidden rounded-lg md:rounded-xl">
               <img

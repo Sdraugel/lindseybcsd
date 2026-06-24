@@ -44,7 +44,6 @@ type Frequency = 'once' | 'monthly';
   template: `
     <section id="get-involved" class="shell py-10 md:py-14">
       <div appReveal>
-        <p class="eyebrow">Join us</p>
         <h2 class="bubble text-4xl md:text-5xl">Get Involved</h2>
         <p class="mt-4 text-lg text-ink">
           Grassroots campaigns run on grassroots support. Chip in to help us

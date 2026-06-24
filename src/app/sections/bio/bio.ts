@@ -15,7 +15,6 @@ import { RevealDirective } from '../../shared/reveal.directive';
         class="grid grid-cols-[minmax(0,1fr)_7rem] items-start gap-4 sm:grid-cols-[minmax(0,1fr)_11rem] sm:gap-6 md:grid-cols-[minmax(0,1fr)_20rem] md:gap-10"
       >
         <div appReveal>
-          <p class="eyebrow">The candidate</p>
           <h2 class="bubble text-4xl md:text-5xl">Meet Lindsey</h2>
           <p class="mt-5 max-w-prose font-body text-ink">
             As a parent, early childhood educator, and community advocate, my
@@ -25,7 +24,7 @@ import { RevealDirective } from '../../shared/reveal.directive';
         </div>
 
         <!-- PHOTO: Lindsey headshot (swap src to replace; optimized copies in public/img/). -->
-        <div appReveal [appReveal]="120">
+        <div appReveal [appReveal]="120" class="self-center">
           <figure class="paper-card rotate-1 p-2 md:p-3">
             <div class="aspect-[4/5] overflow-hidden rounded-lg md:rounded-xl">
               <img
@@ -47,7 +46,6 @@ import { RevealDirective } from '../../shared/reveal.directive';
         class="grid grid-cols-[minmax(0,1fr)_7rem] items-start gap-4 sm:grid-cols-[minmax(0,1fr)_11rem] sm:gap-6 md:grid-cols-[minmax(0,1fr)_20rem] md:gap-10"
       >
         <div appReveal>
-          <p class="eyebrow">My family</p>
           <h2 class="bubble text-4xl md:text-5xl">As a Mom</h2>
           <p class="mt-5 max-w-prose font-body text-ink">
             My name is Lindsey Draugel and I am a mom of three boys that I am
@@ -61,7 +59,7 @@ import { RevealDirective } from '../../shared/reveal.directive';
         </div>
 
         <!-- Family photo supports the "mom of three boys" story. -->
-        <div appReveal [appReveal]="120">
+        <div appReveal [appReveal]="120" class="self-center">
           <figure class="paper-card -rotate-1 p-2 md:p-3">
             <div class="aspect-[4/5] overflow-hidden rounded-lg md:rounded-xl">
               <img

@@ -19,7 +19,6 @@ interface Photo {
   template: `
     <section id="showing-up" class="shell py-10 md:py-14">
       <div appReveal class="max-w-2xl">
-        <p class="eyebrow">On the trail</p>
         <h2 class="bubble text-4xl md:text-5xl">Showing Up</h2>
         <p class="mt-5 font-body text-lg text-ink">
           From board meetings to candidate forums to community events, I show up
@@ -79,8 +78,8 @@ export class Gallery {
     },
     {
       src: 'img/community-color-run.jpg',
-      alt: 'Lindsey Draugel volunteering with students at Philip Simmons Elementary, where she is PTA Events Chair',
-      caption: 'Volunteering at Philip Simmons Elementary (PTA Events Chair)',
+      alt: 'Lindsey Draugel volunteering with students at Philip Simmons Elementary',
+      caption: 'Volunteering at Philip Simmons Elementary',
       tilt: '-rotate-1',
     },
   ];
