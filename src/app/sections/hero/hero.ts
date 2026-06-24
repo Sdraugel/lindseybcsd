@@ -22,7 +22,7 @@ import { ButtonDirective } from '../../shared/button.directive';
             DRAUGEL
           </h1>
           <p
-            class="mt-[-1vw] font-display font-semibold text-raspberry-ink text-[clamp(0.95rem,2.8vw,2.4rem)] text-justify [text-align-last:justify]"
+            class="mt-[-1vw] font-display font-semibold text-raspberry-ink text-[clamp(1.4rem,5.7vw,2.4rem)] text-justify [text-align-last:justify]"
           >
             For School Board · District 2
           </p>
@@ -32,24 +32,24 @@ import { ButtonDirective } from '../../shared/button.directive';
           class="mt-8 flex flex-wrap items-center justify-center gap-x-2 gap-y-2 sm:gap-x-12"
         >
           <li class="flex items-center gap-1 sm:gap-3">
-            <app-check class="sm:hidden" [size]="18" [strokeWidth]="4" />
+            <app-check class="sm:hidden" [size]="20" [strokeWidth]="3.8" />
             <app-check
               class="hidden sm:inline-block"
               [size]="48"
               [strokeWidth]="3.2"
             />
-            <span class="callout text-xs sm:text-2xl md:text-3xl"
+            <span class="callout text-sm sm:text-2xl md:text-3xl"
               >For our students.</span
             >
           </li>
           <li class="flex items-center gap-1 sm:gap-3">
-            <app-check class="sm:hidden" [size]="18" [strokeWidth]="4" />
+            <app-check class="sm:hidden" [size]="20" [strokeWidth]="3.8" />
             <app-check
               class="hidden sm:inline-block"
               [size]="48"
               [strokeWidth]="3.2"
             />
-            <span class="callout text-xs sm:text-2xl md:text-3xl"
+            <span class="callout text-sm sm:text-2xl md:text-3xl"
               >For our teachers.</span
             >
           </li>
