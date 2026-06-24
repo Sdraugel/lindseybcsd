@@ -71,6 +71,8 @@ export class MobileNav {
     { href: '#get-involved', label: 'Get Involved', primary: true },
     { href: '#meet', label: 'Meet Lindsey' },
     { href: '#experience', label: 'Experience' },
+    { href: '#point-of-view', label: 'Point of View' },
+    { href: '#showing-up', label: 'Showing Up' },
     { href: '#priorities', label: 'Priorities' },
   ];
 

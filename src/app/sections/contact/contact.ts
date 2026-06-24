@@ -1,14 +1,14 @@
 /**
  * Get Involved / Donate section.
  *
- * Two cards side by side: "Chip In" (Anedot donations) and a calendar card that
- * embeds the campaign Google Calendar (read-only) plus the "Reach Us Directly"
- * contact details.
+ * Two cards side by side: "Chip In" (Anedot donations) and an "Upcoming Events"
+ * card that embeds the campaign Google Calendar (read-only). Contact details
+ * (email + social) live in the site footer.
  *
  * Online giving runs through Anedot. The account is gated behind ANEDOT_URL:
- * while it is empty the donation UI shows an "opening soon" state with an email
- * fallback. Paste the hosted donation-page "Share URL" into ANEDOT_URL to go live
- * (pre-fill amount/frequency via ?amount=100&frequency=monthly).
+ * while it is empty the donation UI shows an "opening soon" state. Paste the
+ * hosted donation-page "Share URL" into ANEDOT_URL to go live (pre-fill
+ * amount/frequency via ?amount=100&frequency=monthly).
  */
 import {
   ChangeDetectionStrategy,
@@ -21,8 +21,6 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 import { RevealDirective } from '../../shared/reveal.directive';
 import { ButtonDirective } from '../../shared/button.directive';
-
-const CONTACT_EMAIL = 'draugelfordistrict2@gmail.com';
 
 /** Public Google Calendar ID (must be a public calendar to embed). */
 const CALENDAR_ID = 'draugelfordistrict2@gmail.com';
@@ -50,8 +48,9 @@ type Frequency = 'once' | 'monthly';
         <h2 class="bubble text-4xl md:text-5xl">Get Involved</h2>
         <p class="mt-4 text-lg text-ink">
           Grassroots campaigns run on grassroots support. Chip in to help us
-          reach every voter in District 2 - every dollar goes straight to
-          signs, mailers, and getting Lindsey's message out.
+          reach every voter in District 2 - every dollar goes straight to signs,
+          mailers, and getting Lindsey's message out. Want to volunteer, host a
+          yard sign, or just stay in the loop? We'd love to hear from you.
         </p>
       </div>
 
@@ -211,7 +210,7 @@ type Frequency = 'once' | 'monthly';
           -->
         </div>
 
-        <!-- Calendar + how to reach us -->
+        <!-- Upcoming events (read-only Google Calendar embed) -->
         <aside appReveal [appReveal]="160" class="paper-card p-6 md:p-8">
           <h3 class="bubble text-2xl">Upcoming Events</h3>
           <p class="mt-3 text-ink">
@@ -233,41 +232,6 @@ type Frequency = 'once' | 'monthly';
               Events are coming soon.
             </p>
           }
-
-          <h3 class="bubble text-xl mt-8">Reach Us Directly</h3>
-          <p class="mt-3 text-ink">
-            Want to volunteer, host a yard sign, or just stay in the loop? Email
-            us anytime - we'd love to hear from you.
-          </p>
-          <p class="mt-2">
-            <a
-              class="font-display font-bold text-brand-blue underline decoration-2 underline-offset-2 hover:text-brand-blue-soft break-words"
-              [href]="'mailto:' + email"
-              >{{ email }}</a
-            >
-          </p>
-
-          <h3 class="bubble text-lg mt-6">Follow Along</h3>
-          <!-- TODO(social): only Facebook is wired up. Add Instagram / others here when their URLs exist. -->
-          <ul class="mt-3 flex flex-wrap gap-3">
-            @for (s of socials; track s.name) {
-              <li>
-                <a
-                  [href]="s.href"
-                  [attr.aria-label]="s.label"
-                  [attr.target]="s.external ? '_blank' : null"
-                  [attr.rel]="s.external ? 'noopener noreferrer' : null"
-                  class="inline-flex h-11 w-11 items-center justify-center rounded-full bg-brand-blue/10 text-brand-blue transition hover:bg-brand-blue hover:text-white"
-                >
-                  @switch (s.name) {
-                    @case ('facebook') {
-                      <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.5 21v-7h2.3l.4-2.8h-2.7V9.4c0-.8.2-1.4 1.4-1.4h1.4V5.5c-.2 0-1.1-.1-2-.1-2 0-3.4 1.2-3.4 3.5v1.9H8.6V14h2.3v7h2.6z"/></svg>
-                    }
-                  }
-                </a>
-              </li>
-            }
-          </ul>
         </aside>
       </div>
     </section>
@@ -275,9 +239,6 @@ type Frequency = 'once' | 'monthly';
 })
 export class Contact {
   private readonly sanitizer = inject(DomSanitizer);
-
-  /** Visible contact email address. */
-  protected readonly email = CONTACT_EMAIL;
 
   /** Read-only Google Calendar embed (agenda view), or null when unset. */
   protected readonly calendarUrl: SafeResourceUrl | null = CALENDAR_ID
@@ -337,20 +298,6 @@ export class Contact {
     }
     return url.toString();
   });
-
-  /**
-   * Social links. Only Facebook (the live campaign page) is shown. To add
-   * Instagram or others, push another entry with name/label/href/external and
-   * add a matching @case SVG in the template above.
-   */
-  protected readonly socials = [
-    {
-      name: 'facebook',
-      label: "Follow Lindsey Draugel's campaign on Facebook",
-      href: 'https://www.facebook.com/profile.php?id=61567444822559',
-      external: true,
-    },
-  ];
 
   protected selectPreset(amount: number): void {
     this.selected.set(amount);

@@ -17,9 +17,7 @@ import { RevealDirective } from '../../shared/reveal.directive';
         <div appReveal>
           <p class="eyebrow">The candidate</p>
           <h2 class="bubble text-4xl md:text-5xl">Meet Lindsey</h2>
-          <p
-            class="mt-5 max-w-prose font-body text-lg italic text-raspberry-ink md:text-xl"
-          >
+          <p class="mt-5 max-w-prose font-body text-ink">
             As a parent, early childhood educator, and community advocate, my
             focus is committed to being a student-centered and teacher-forward
             voice for our district.

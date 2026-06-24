@@ -47,6 +47,8 @@ import { ButtonDirective } from '../../shared/button.directive';
           <a appButton href="#get-involved">Get Involved</a>
           <a appButton variant="ghost" href="#meet">Meet Lindsey</a>
           <a appButton variant="ghost" href="#experience">Experience</a>
+          <a appButton variant="ghost" href="#point-of-view">Point of View</a>
+          <a appButton variant="ghost" href="#showing-up">Showing Up</a>
           <a appButton variant="ghost" href="#priorities">Priorities</a>
         </div>
       </div>

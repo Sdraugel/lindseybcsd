@@ -109,6 +109,7 @@
      section's heading lands consistently on a line instead of being cut by one. */
   .notebook-paper {
     position: relative;
+    overflow-x: clip; /* contain the full-bleed ruled-line pseudo elements */
     background-color: var(--color-paper);
     background-image: linear-gradient(
       to right,
@@ -121,10 +122,20 @@
     background-position: 0 0;
   }
 
-  /* Blue ruled lines, restarted at the top of every section/footer. --rule-offset
-     shifts the first line so section headings (eyebrow + h2, same structure
-     everywhere) sit on a line. */
+  /* Blue ruled lines, restarted at the top of every section/footer so section
+     headings (eyebrow + h2, same structure everywhere) sit on a line instead of
+     being cut by one. Drawn on a full-bleed ::before so the lines span the whole
+     page width, not just the centered .shell column. --rule-offset shifts where
+     the first line falls. */
   .notebook-paper :is(section, footer) {
+    position: relative;
+    z-index: 0;
+  }
+  .notebook-paper :is(section, footer)::before {
+    content: "";
+    position: absolute;
+    inset: 0 calc(50% - 50vw);
+    z-index: -1;
     background-image: repeating-linear-gradient(
       to bottom,
       transparent 0,
@@ -133,6 +144,7 @@
       var(--paper-rule-blue) var(--rule-gap)
     );
     background-position: 0 var(--rule-offset);
+    pointer-events: none;
   }
 
   /* Centered content column that clears the red margin line on the left. */
