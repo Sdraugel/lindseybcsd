@@ -1,45 +1,36 @@
 /**
  * Get Involved / Donate section.
  *
- * Online giving runs through Anedot (https://anedot.com). The committee's
- * Anedot account is not finished yet, so everything below is BUILT AND READY
- * but gated behind a single constant:
+ * Two cards side by side: "Chip In" (Anedot donations) and a calendar card that
+ * embeds the campaign Google Calendar (read-only) plus the "Reach Us Directly"
+ * contact details.
  *
- *   ┌──────────────────────────────────────────────────────────────────────┐
- *   │  TODO(anedot): paste the live hosted donation-page "Share URL" into    │
- *   │  ANEDOT_URL below (e.g. 'https://secure.anedot.com/<committee>/donate').│
- *   │  The moment it is non-empty, the amount tiles go live and the Donate   │
- *   │  button links out (new tab) with the chosen amount + frequency         │
- *   │  pre-filled. Until then the UI shows a friendly "opening soon" state   │
- *   │  with an email fallback, so nothing links to a broken page.            │
- *   └──────────────────────────────────────────────────────────────────────┘
- *
- * Pre-fill via Anedot URL parameters (confirmed in Anedot's docs):
- *   ?amount=100          whole dollars, no cents
- *   &frequency=monthly   recurring commitment
- * Docs: https://help.anedot.com/knowledge/url-parameter
- *
- * Prefer an on-page form instead of linking out? Anedot also offers an iframe
- * "Embed Code". Drop that <iframe> in place of the amount tiles + Donate button
- * (Anedot recommends the hosted Share URL over the iframe, which is why the
- * link-out approach is wired up here).
+ * Online giving runs through Anedot. The account is gated behind ANEDOT_URL:
+ * while it is empty the donation UI shows an "opening soon" state with an email
+ * fallback. Paste the hosted donation-page "Share URL" into ANEDOT_URL to go live
+ * (pre-fill amount/frequency via ?amount=100&frequency=monthly).
  */
 import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  inject,
   signal,
 } from '@angular/core';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 import { RevealDirective } from '../../shared/reveal.directive';
 import { ButtonDirective } from '../../shared/button.directive';
 
 const CONTACT_EMAIL = 'draugelfordistrict2@gmail.com';
 
+/** Public Google Calendar ID (must be a public calendar to embed). */
+const CALENDAR_ID = 'draugelfordistrict2@gmail.com';
+
 /**
  * Live Anedot hosted donation-page URL. EMPTY = donations not open yet (the UI
- * shows an "opening soon" state). See the TODO(anedot) block at the top of this
- * file. Example once ready: 'https://secure.anedot.com/draugel-d2/donate'
+ * shows an "opening soon" state). Example once ready:
+ * 'https://secure.anedot.com/draugel-d2/donate'
  */
 const ANEDOT_URL = '';
 
@@ -182,17 +173,7 @@ type Frequency = 'once' | 'monthly';
             }
           </div>
 
-          @if (!donationsOpen()) {
-            <p class="mt-4 text-sm text-ink-soft">
-              Secure online giving is opening soon. To contribute today, email
-              us at
-              <a
-                class="font-display font-bold text-brand-blue underline decoration-2 underline-offset-2 hover:text-brand-blue-soft break-words"
-                [href]="'mailto:' + email"
-                >{{ email }}</a
-              >.
-            </p>
-          } @else {
+          @if (donationsOpen()) {
             <p class="mt-4 flex items-center gap-2 text-sm text-ink-soft">
               <svg
                 width="16"
@@ -230,9 +211,30 @@ type Frequency = 'once' | 'monthly';
           -->
         </div>
 
-        <!-- Contact details + socials -->
+        <!-- Calendar + how to reach us -->
         <aside appReveal [appReveal]="160" class="paper-card p-6 md:p-8">
-          <h3 class="bubble text-2xl">Reach Us Directly</h3>
+          <h3 class="bubble text-2xl">Upcoming Events</h3>
+          <p class="mt-3 text-ink">
+            Come say hello. Events are posted here as they're scheduled.
+          </p>
+          @if (calendarUrl) {
+            <div class="mt-4 overflow-hidden rounded-xl ring-1 ring-black/5">
+              <iframe
+                [src]="calendarUrl"
+                title="Lindsey Draugel campaign events calendar"
+                class="block h-72 w-full border-0"
+                loading="lazy"
+              ></iframe>
+            </div>
+          } @else {
+            <p
+              class="mt-4 rounded-xl bg-paper px-4 py-8 text-center text-sm text-ink-soft"
+            >
+              Events are coming soon.
+            </p>
+          }
+
+          <h3 class="bubble text-xl mt-8">Reach Us Directly</h3>
           <p class="mt-3 text-ink">
             Want to volunteer, host a yard sign, or just stay in the loop? Email
             us anytime - we'd love to hear from you.
@@ -245,7 +247,7 @@ type Frequency = 'once' | 'monthly';
             >
           </p>
 
-          <h3 class="bubble text-xl mt-8">Follow Along</h3>
+          <h3 class="bubble text-lg mt-6">Follow Along</h3>
           <!-- TODO(social): only Facebook is wired up. Add Instagram / others here when their URLs exist. -->
           <ul class="mt-3 flex flex-wrap gap-3">
             @for (s of socials; track s.name) {
@@ -272,8 +274,20 @@ type Frequency = 'once' | 'monthly';
   `,
 })
 export class Contact {
+  private readonly sanitizer = inject(DomSanitizer);
+
   /** Visible contact email address. */
   protected readonly email = CONTACT_EMAIL;
+
+  /** Read-only Google Calendar embed (agenda view), or null when unset. */
+  protected readonly calendarUrl: SafeResourceUrl | null = CALENDAR_ID
+    ? this.sanitizer.bypassSecurityTrustResourceUrl(
+        'https://calendar.google.com/calendar/embed?src=' +
+          encodeURIComponent(CALENDAR_ID) +
+          '&ctz=America%2FNew_York&mode=AGENDA' +
+          '&showTitle=0&showPrint=0&showTabs=0&showCalendars=0&showTz=0&bgcolor=%23FBFAF3',
+      )
+    : null;
 
   /** Suggested contribution amounts (whole dollars). */
   protected readonly presets = PRESET_AMOUNTS;
@@ -287,10 +301,7 @@ export class Contact {
   /** One-time vs. recurring monthly gift. */
   protected readonly frequency = signal<Frequency>('once');
 
-  /**
-   * Whether online giving is live. False until ANEDOT_URL is filled in - see
-   * the TODO(anedot) block at the top of this file.
-   */
+  /** Whether online giving is live. False until ANEDOT_URL is filled in. */
   protected readonly donationsOpen = computed(() => ANEDOT_URL.length > 0);
 
   /** The resolved contribution amount in whole dollars (0 = not valid yet). */

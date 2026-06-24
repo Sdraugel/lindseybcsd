@@ -66,9 +66,9 @@ export class Gallery {
       tilt: 'rotate-1',
     },
     {
-      src: 'img/advocacy-public-education.jpg',
-      alt: 'Lindsey Draugel with fellow advocates supporting public education at a community event',
-      caption: 'Standing up for public education',
+      src: 'img/community-carnival.jpg',
+      alt: 'Lindsey Draugel volunteering at a community carnival event',
+      caption: 'Out in the community',
       tilt: '-rotate-1',
     },
     {

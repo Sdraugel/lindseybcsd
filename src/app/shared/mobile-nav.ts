@@ -72,7 +72,6 @@ export class MobileNav {
     { href: '#meet', label: 'Meet Lindsey' },
     { href: '#experience', label: 'Experience' },
     { href: '#priorities', label: 'Priorities' },
-    { href: '#events', label: 'Upcoming Events' },
   ];
 
   protected toggle(): void {

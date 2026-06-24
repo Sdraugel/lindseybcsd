@@ -15,15 +15,18 @@ import { ButtonDirective } from '../../shared/button.directive';
   template: `
     <section id="top" class="shell pt-12 md:pt-16 pb-10 md:pb-14">
       <div appReveal class="text-center">
-        <h1 class="bubble text-[clamp(3rem,9vw,8rem)] leading-[1.02]">
-          DRAUGEL
-        </h1>
-
-        <p
-          class="mt-6 font-display text-raspberry-ink text-xl sm:text-2xl md:text-3xl font-semibold"
-        >
-          For School Board · District 2
-        </p>
+        <!-- Name + tagline share a shrink-to-fit box so the tagline can be
+             justified across the exact width of DRAUGEL at any screen size. -->
+        <div class="inline-block">
+          <h1 class="bubble text-[clamp(3rem,9vw,8rem)] leading-[1]">
+            DRAUGEL
+          </h1>
+          <p
+            class="mt-[-1vw] font-display font-semibold text-raspberry-ink text-[clamp(0.95rem,2.8vw,2.4rem)] text-justify [text-align-last:justify]"
+          >
+            For School Board · District 2
+          </p>
+        </div>
 
         <ul
           class="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-center sm:gap-x-12"
@@ -45,7 +48,6 @@ import { ButtonDirective } from '../../shared/button.directive';
           <a appButton variant="ghost" href="#meet">Meet Lindsey</a>
           <a appButton variant="ghost" href="#experience">Experience</a>
           <a appButton variant="ghost" href="#priorities">Priorities</a>
-          <a appButton variant="ghost" href="#events">Upcoming Events</a>
         </div>
       </div>
     </section>

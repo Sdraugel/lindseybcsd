@@ -7,7 +7,6 @@ import { Bio } from './sections/bio/bio';
 import { Experience } from './sections/experience/experience';
 import { Gallery } from './sections/gallery/gallery';
 import { Priorities } from './sections/priorities/priorities';
-import { Events } from './sections/events/events';
 import { Contact } from './sections/contact/contact';
 import { SiteFooter } from './sections/footer/footer';
 
@@ -23,7 +22,6 @@ import { SiteFooter } from './sections/footer/footer';
     Experience,
     Gallery,
     Priorities,
-    Events,
     Contact,
     SiteFooter,
   ],

@@ -48,6 +48,7 @@
   --paper-rule-blue: rgba(122, 167, 214, 0.34);
   --paper-rule-red: rgba(214, 104, 90, 0.5);
   --rule-gap: 2rem; /* spacing between horizontal ruled lines */
+  --rule-offset: 4px; /* shifts each section's lines so headings sit on a line */
   --margin-x: 1.75rem; /* x-offset of the red vertical margin line */
   --nav-h: 4rem; /* sticky header height (for scroll-margin) */
 }
@@ -55,6 +56,7 @@
 @media (min-width: 768px) {
   :root {
     --rule-gap: 2.25rem;
+    --rule-offset: 16px;
     --margin-x: 4.5rem;
     --nav-h: 4.5rem;
   }
@@ -102,30 +104,35 @@
    Placed in the components layer so Tailwind utilities can still override.
    ------------------------------------------------------------------------- */
 @layer components {
-  /* Notebook paper background. Layer 1 = single red vertical margin line,
-     layer 2 = repeating faint blue horizontal rules. Used by <app-paper>. */
+  /* Notebook paper: the single red vertical margin line runs the full height
+     here. The faint blue horizontal rules are drawn per-section (below) so each
+     section's heading lands consistently on a line instead of being cut by one. */
   .notebook-paper {
     position: relative;
     background-color: var(--color-paper);
-    background-image:
-      linear-gradient(
-        to right,
-        transparent calc(var(--margin-x) - 1px),
-        var(--paper-rule-red) calc(var(--margin-x) - 1px),
-        var(--paper-rule-red) calc(var(--margin-x) + 1px),
-        transparent calc(var(--margin-x) + 1px)
-      ),
-      repeating-linear-gradient(
-        to bottom,
-        transparent 0,
-        transparent calc(var(--rule-gap) - 1px),
-        var(--paper-rule-blue) calc(var(--rule-gap) - 1px),
-        var(--paper-rule-blue) var(--rule-gap)
-      );
-    background-repeat: no-repeat, repeat;
-    background-position:
-      0 0,
-      0 0;
+    background-image: linear-gradient(
+      to right,
+      transparent calc(var(--margin-x) - 1px),
+      var(--paper-rule-red) calc(var(--margin-x) - 1px),
+      var(--paper-rule-red) calc(var(--margin-x) + 1px),
+      transparent calc(var(--margin-x) + 1px)
+    );
+    background-repeat: no-repeat;
+    background-position: 0 0;
+  }
+
+  /* Blue ruled lines, restarted at the top of every section/footer. --rule-offset
+     shifts the first line so section headings (eyebrow + h2, same structure
+     everywhere) sit on a line. */
+  .notebook-paper :is(section, footer) {
+    background-image: repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent calc(var(--rule-gap) - 1px),
+      var(--paper-rule-blue) calc(var(--rule-gap) - 1px),
+      var(--paper-rule-blue) var(--rule-gap)
+    );
+    background-position: 0 var(--rule-offset);
   }
 
   /* Centered content column that clears the red margin line on the left. */
