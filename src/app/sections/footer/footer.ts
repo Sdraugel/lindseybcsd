@@ -52,7 +52,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
             <!-- TODO(legal): Confirm the exact SC campaign-finance disclaimer wording required and the registered committee name. SC law may mandate specific "Paid for by ..." text. Verify before publishing. -->
             <p>
               Paid for by
-              <span class="font-semibold text-ink">[PLACEHOLDER: campaign committee name]</span>
+              <span class="font-semibold text-ink">Draugel for District 2</span>
             </p>
 
             <p class="text-ink-soft">
