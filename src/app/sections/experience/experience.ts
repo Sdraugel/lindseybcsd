@@ -25,18 +25,17 @@ import { RevealDirective } from '../../shared/reveal.directive';
           </p>
         </div>
 
-        <!-- PHOTO: add an experience photo here (replace the placeholder with an
-             <img src="img/..."> like the other sections). -->
+        <!-- PHOTO: Lindsey with the Charleston's Choice award for the preschool. -->
         <div appReveal [appReveal]="120" class="self-center">
           <figure class="paper-card rotate-1 p-2 md:p-3">
-            <div
-              class="flex aspect-[4/5] items-center justify-center rounded-lg border-2 border-dashed border-ink-soft/30 bg-paper/50 md:rounded-xl"
-            >
-              <span
-                class="px-2 text-center font-display text-xs text-ink-soft md:text-sm"
-              >
-                Photo coming soon
-              </span>
+            <div class="aspect-[4/5] overflow-hidden rounded-lg md:rounded-xl">
+              <img
+                src="img/experience.jpg"
+                alt="Lindsey Draugel holding the Charleston's Choice award for her preschool"
+                loading="lazy"
+                decoding="async"
+                class="h-full w-full object-cover object-center"
+              />
             </div>
           </figure>
         </div>
