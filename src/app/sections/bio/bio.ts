@@ -61,13 +61,13 @@ import { RevealDirective } from '../../shared/reveal.directive';
         <!-- Family photo supports the "mom of three boys" story. -->
         <div appReveal [appReveal]="120" class="self-center">
           <figure class="paper-card -rotate-1 p-2 md:p-3">
-            <div class="aspect-[4/5] overflow-hidden rounded-lg md:rounded-xl">
+            <div class="aspect-[860/1305] overflow-hidden rounded-lg md:rounded-xl">
               <img
                 src="img/family.jpg"
                 alt="Lindsey Draugel with her three sons"
                 loading="lazy"
                 decoding="async"
-                class="h-full w-full object-cover object-center"
+                class="h-full w-full object-cover object-top"
               />
             </div>
           </figure>
