@@ -34,10 +34,11 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      # base-href must match the repo name so assets resolve at
-      # https://sdraugel.github.io/lindseybcsd/
+      # Served from the custom apex domain (draugelfordistrict2.com), so assets
+      # resolve at the site root. The public/CNAME file binds the domain in
+      # GitHub Pages.
       - name: Build
-        run: npm run build -- --base-href=/lindseybcsd/
+        run: npm run build -- --base-href=/
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v5

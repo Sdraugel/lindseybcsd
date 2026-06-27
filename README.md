@@ -50,11 +50,18 @@ A GitHub Actions workflow (`.github/workflows/deploy.yml`) builds the site and
 deploys it to GitHub Pages on every push to the **develop** branch (it can also
 be run manually from the Actions tab).
 
-The build uses `--base-href=/lindseybcsd/` so asset paths resolve correctly at
-`https://sdraugel.github.io/lindseybcsd/`.
+The site is served from the custom apex domain
+[draugelfordistrict2.com](https://draugelfordistrict2.com/), so the build uses
+`--base-href=/` and `public/CNAME` binds the domain in GitHub Pages.
 
 **One-time setup in the GitHub repo:** Settings > Pages > "Build and deployment"
 > Source = **GitHub Actions**. After that, every push to `develop` publishes.
+
+**DNS (at the domain registrar):** point the apex `@` record at GitHub Pages'
+four A records (185.199.108.153, 185.199.109.153, 185.199.110.153,
+185.199.111.153) and the four AAAA records (2606:50c0:8000::153,
+2606:50c0:8001::153, 2606:50c0:8002::153, 2606:50c0:8003::153). Add a `www`
+CNAME pointing to `sdraugel.github.io.` if a www subdomain is also wanted.
 
 ## Project structure
 
