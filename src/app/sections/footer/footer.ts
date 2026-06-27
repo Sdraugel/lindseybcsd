@@ -8,7 +8,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [],
   template: `
-    <footer class="border-t border-black/10 text-sm text-ink-soft">
+    <footer class="text-sm text-ink-soft">
       <div class="shell py-10">
         <div class="flex flex-col gap-6">
           <!-- Brand line -->
