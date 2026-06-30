@@ -43,7 +43,7 @@ interface NavLink {
         <nav
           id="mobile-nav-menu"
           aria-label="Primary"
-          class="fixed right-3 top-16 z-[70] w-60 rounded-2xl bg-paper-soft p-2 shadow-[0_20px_40px_-20px_rgba(24,42,110,0.6)] ring-1 ring-black/10"
+          class="fixed right-3 top-16 z-[70] w-60 rounded-[14px] bg-paper-soft p-2 shadow-[0_20px_40px_-20px_rgba(24,42,110,0.6)] ring-1 ring-black/10"
         >
           @for (link of links; track link.href) {
             <a
