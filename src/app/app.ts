@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { PaperComponent } from './shared/paper';
 import { BackToTop } from './shared/back-to-top';
 import { MobileNav } from './shared/mobile-nav';
+import { SiteHeader } from './shared/site-header';
 import { Hero } from './sections/hero/hero';
 import { Bio } from './sections/bio/bio';
 import { Experience } from './sections/experience/experience';
@@ -17,6 +18,7 @@ import { SiteFooter } from './sections/footer/footer';
     PaperComponent,
     BackToTop,
     MobileNav,
+    SiteHeader,
     Hero,
     Bio,
     Experience,

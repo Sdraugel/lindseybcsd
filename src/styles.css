@@ -102,6 +102,14 @@
 /* -------------------------------------------------------------------------
    COMPONENT CLASSES (reusable design-system pieces)
    Placed in the components layer so Tailwind utilities can still override.
+
+   RADIUS SCALE (one documented system - apply consistently):
+     - interactive (buttons, chips, toggles, nav pills, status badges): full pill
+     - surfaces / floating panels / cards (.paper-card, mobile-nav menu): 14px
+     - inputs (.field): 10px
+     - image frames nested inside a card: rounded-lg -> rounded-xl (8 -> 12px),
+       i.e. always <= the 14px card radius so corners stay concentric
+     - keyboard focus ring: 6px
    ------------------------------------------------------------------------- */
 @layer components {
   /* Notebook paper: one continuous set of faint blue horizontal rules plus a
@@ -271,66 +279,14 @@
 }
 
 /* -------------------------------------------------------------------------
-   RULED-LINE ALIGNMENT
-   The blue rules are one continuous, evenly spaced grid (see .notebook-paper).
-   Because each section's natural height is not a whole number of line-gaps, a
-   section's heading lands at an arbitrary point between lines. These per-section
-   padding-top overrides (id specificity beats the Tailwind py-* utility) nudge
-   each section so its heading sits on a ruled line. Values are cumulative: each
-   accounts for the shift introduced by the sections above it, so they are tuned
-   per breakpoint (text reflow and --rule-gap differ) and must be re-measured if
-   section copy changes substantially.
+   SECTION RHYTHM (replaces the former per-section ruled-line padding overrides)
+   The blue rules stay one continuous, evenly spaced grid (see .notebook-paper).
+   Previously each section carried a hand-measured padding-top so its heading
+   landed exactly on a ruled line; the values were cumulative and re-broke on any
+   copy or layout change (and the redesign changes both). Per-pixel snapping of
+   flow headings to a background grid genuinely needs measured offsets, so rather
+   than ship 16 stale numbers we now set an intentional, varied vertical rhythm
+   directly on each section via Tailwind py-* utilities (hero tight, feature
+   sections breathe). The even rule grid is unchanged. If exact heading-on-line
+   snapping is wanted back, re-measure offsets per section after a visual pass.
    ------------------------------------------------------------------------- */
-@media (max-width: 767px) {
-  #top {
-    padding-top: 40px;
-  }
-  #get-involved {
-    padding-top: 46px;
-  }
-  #meet {
-    padding-top: 37px;
-  }
-  #as-a-mom {
-    padding-top: 28px;
-  }
-  #experience {
-    padding-top: 35px;
-  }
-  #point-of-view {
-    padding-top: 34px;
-  }
-  #showing-up {
-    padding-top: 54px;
-  }
-  #priorities {
-    padding-top: 28px;
-  }
-}
-
-@media (min-width: 768px) {
-  #top {
-    padding-top: 48px;
-  }
-  #get-involved {
-    padding-top: 62px;
-  }
-  #meet {
-    padding-top: 72px;
-  }
-  #as-a-mom {
-    padding-top: 55px;
-  }
-  #experience {
-    padding-top: 47px;
-  }
-  #point-of-view {
-    padding-top: 55px;
-  }
-  #showing-up {
-    padding-top: 54px;
-  }
-  #priorities {
-    padding-top: 57px;
-  }
-}
