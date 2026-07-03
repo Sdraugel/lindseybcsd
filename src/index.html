@@ -12,9 +12,14 @@
     <meta name="theme-color" content="#2748C8" />
     <meta name="color-scheme" content="light" />
 
-    <!-- Social sharing (Open Graph / Twitter). The share card is a 1200x630 sign
+    <!-- The one canonical URL for this single-page site. -->
+    <link rel="canonical" href="https://draugelfordistrict2.com/" />
+
+    <!-- Social sharing (Open Graph / Twitter). The share card is a 2400x1260 sign
          graphic at public/social-card.png (regenerate from qa/og-card.html). -->
     <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Draugel for District 2" />
+    <meta property="og:locale" content="en_US" />
     <meta property="og:url" content="https://draugelfordistrict2.com/" />
     <meta property="og:title" content="Draugel for School Board · District 2" />
     <meta
@@ -27,7 +32,55 @@
     <meta property="og:image:height" content="1260" />
     <meta property="og:image:alt" content="Lindsey Draugel for School Board, District 2. For our students. For our teachers." />
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Draugel for School Board · District 2" />
+    <meta
+      name="twitter:description"
+      content="For our students. For our teachers. Draugel for BCSD Board, District 2."
+    />
     <meta name="twitter:image" content="https://draugelfordistrict2.com/social-card.png?v=2" />
+    <meta name="twitter:image:alt" content="Lindsey Draugel for School Board, District 2. For our students. For our teachers." />
+
+    <!-- Structured data: the candidate (Person), the campaign committee
+         (Organization), and the site (WebSite). Static so every crawler sees it,
+         regardless of JS or prerendering. -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Person",
+            "@id": "https://draugelfordistrict2.com/#lindsey-draugel",
+            "name": "Lindsey Draugel",
+            "url": "https://draugelfordistrict2.com/",
+            "image": "https://draugelfordistrict2.com/img/lindsey-headshot.jpg",
+            "jobTitle": "Candidate for Berkeley County School District Board of Education, District 2",
+            "description": "Parent, early-childhood educator, and community advocate running for the Berkeley County School District Board of Education, District 2.",
+            "sameAs": ["https://www.facebook.com/profile.php?id=61567444822559"],
+            "homeLocation": {
+              "@type": "Place",
+              "name": "Berkeley County, South Carolina"
+            }
+          },
+          {
+            "@type": "Organization",
+            "@id": "https://draugelfordistrict2.com/#campaign",
+            "name": "Draugel for District 2",
+            "url": "https://draugelfordistrict2.com/",
+            "logo": "https://draugelfordistrict2.com/img/logo.png",
+            "email": "draugelfordistrict2@gmail.com",
+            "sameAs": ["https://www.facebook.com/profile.php?id=61567444822559"],
+            "areaServed": "Berkeley County School District, District 2, South Carolina"
+          },
+          {
+            "@type": "WebSite",
+            "@id": "https://draugelfordistrict2.com/#website",
+            "url": "https://draugelfordistrict2.com/",
+            "name": "Draugel for School Board · District 2",
+            "publisher": { "@id": "https://draugelfordistrict2.com/#campaign" }
+          }
+        ]
+      }
+    </script>
 
     <link rel="icon" type="image/png" href="favicon.png" />
 
