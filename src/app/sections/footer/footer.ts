@@ -58,6 +58,33 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
             <p class="text-ink-soft">
               &copy; {{ year }} Lindsey Draugel for District 2.
             </p>
+
+            <p class="mt-1 flex items-center gap-1.5 text-xs text-ink-soft">
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path d="m8 16-4-4 4-4" />
+                <path d="m16 8 4 4-4 4" />
+              </svg>
+              <span
+                >Site built by
+                <a
+                  class="font-semibold text-brand-blue underline decoration-brand-blue/40 underline-offset-2 hover:decoration-brand-blue"
+                  href="https://www.draugelengineering.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >Draugel Engineering, LLC</a
+                ></span
+              >
+            </p>
           </div>
         </div>
       </div>
