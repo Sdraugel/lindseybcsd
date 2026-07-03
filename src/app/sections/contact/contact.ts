@@ -27,10 +27,14 @@ const CALENDAR_ID = 'draugelfordistrict2@gmail.com';
 
 /**
  * Live Anedot hosted donation-page URL. EMPTY = donations not open yet (the UI
- * shows an "opening soon" state). Example once ready:
- * 'https://secure.anedot.com/draugel-d2/donate'
+ * shows an "opening soon" state). The chosen amount (whole dollars) and monthly
+ * frequency are appended as Anedot URL parameters (?amount=100&frequency=monthly).
+ *
+ * NOTE: as of go-live this page was still pending Anedot verification/approval
+ * and 404s until that clears; it starts working automatically once Anedot
+ * publishes the page (no code change needed).
  */
-const ANEDOT_URL = '';
+const ANEDOT_URL = 'https://secure.anedot.com/draugel-for-bcsd-2/donate';
 
 /** Suggested one-tap contribution amounts, in whole dollars. */
 const PRESET_AMOUNTS = [25, 50, 100, 250] as const;
