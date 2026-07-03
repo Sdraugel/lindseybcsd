@@ -9,26 +9,26 @@ import { CheckmarkComponent } from '../../shared/checkmark';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [RevealDirective, CheckmarkComponent],
   template: `
-    <section id="priorities" class="shell py-10 md:py-14">
+    <section id="priorities" class="shell py-14 md:py-20">
       <div appReveal class="max-w-2xl">
         <h2 class="bubble text-4xl md:text-5xl">What I'll Fight For</h2>
       </div>
 
       <ul
-        class="mt-10 md:mt-14 grid grid-cols-2 gap-4 sm:gap-6 md:gap-8 items-stretch list-none p-0"
+        class="mt-10 md:mt-14 grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 md:gap-8 items-stretch list-none p-0"
       >
         @for (card of cards; track card.heading; let i = $index) {
           <li appReveal [appReveal]="i * 90" class="h-full">
-            <article class="paper-card h-full p-3 sm:p-4 md:p-6 flex flex-col">
-              <div class="flex items-start gap-2">
-                <app-check [size]="24" class="shrink-0" />
+            <article class="paper-card h-full p-4 sm:p-5 md:p-6 flex flex-col">
+              <div class="flex items-start gap-2.5">
+                <app-check [size]="26" class="shrink-0" />
                 <h3
-                  class="font-display leading-tight text-brand-blue text-sm sm:text-base md:text-xl"
+                  class="font-display leading-tight text-brand-blue text-base sm:text-lg md:text-xl"
                 >
                   {{ card.heading }}
                 </h3>
               </div>
-              <p class="mt-1.5 text-xs leading-snug sm:text-sm sm:leading-normal text-ink">
+              <p class="mt-2 text-sm leading-normal text-ink">
                 {{ card.body }}
               </p>
             </article>
