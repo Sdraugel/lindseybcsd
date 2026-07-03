@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://draugelfordistrict2.com/sitemap.xml
