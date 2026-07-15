@@ -49,7 +49,15 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
           </div>
 
           <div class="flex flex-col gap-2">
-            <!-- TODO(legal): Confirm the exact SC campaign-finance disclaimer wording required and the registered committee name. SC law may mandate specific "Paid for by ..." text. Verify before publishing. -->
+            <!--
+              TODO(legal): SC Code section 8-13-1354 requires the payer's NAME +
+              ADDRESS on campaign communications. Add the committee mailing
+              address after the name below (recommended format: "Paid for by
+              Draugel for District 2, PO Box ..., City, SC ZIP"). Keep this
+              consistent with the disclaimer in the Shop section. Confirm the
+              exact wording with the committee's compliance contact / SC State
+              Ethics Commission before publishing.
+            -->
             <p>
               Paid for by
               <span class="font-semibold text-ink">Draugel for District 2</span>

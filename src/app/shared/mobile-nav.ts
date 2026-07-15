@@ -69,6 +69,7 @@ export class MobileNav {
 
   protected readonly links: NavLink[] = [
     { href: '#get-involved', label: 'Get Involved', primary: true },
+    { href: '#shop', label: 'Shop' },
     { href: '#meet', label: 'Meet Lindsey' },
     { href: '#experience', label: 'Experience' },
     { href: '#point-of-view', label: 'Point of View' },

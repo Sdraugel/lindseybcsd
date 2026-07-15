@@ -68,6 +68,7 @@ export class SiteHeader {
   /** Section links in page/scroll order (matches the section DOM order). */
   protected readonly links: NavLink[] = [
     { href: '#get-involved', label: 'Get Involved' },
+    { href: '#shop', label: 'Shop' },
     { href: '#meet', label: 'Meet Lindsey' },
     { href: '#experience', label: 'Experience' },
     { href: '#point-of-view', label: 'Point of View' },

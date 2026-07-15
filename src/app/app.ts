@@ -9,6 +9,7 @@ import { Experience } from './sections/experience/experience';
 import { Gallery } from './sections/gallery/gallery';
 import { Priorities } from './sections/priorities/priorities';
 import { Contact } from './sections/contact/contact';
+import { Shop } from './sections/shop/shop';
 import { SiteFooter } from './sections/footer/footer';
 
 @Component({
@@ -25,6 +26,7 @@ import { SiteFooter } from './sections/footer/footer';
     Gallery,
     Priorities,
     Contact,
+    Shop,
     SiteFooter,
   ],
   templateUrl: './app.html',
