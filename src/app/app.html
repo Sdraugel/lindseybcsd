@@ -1,4 +1,5 @@
-<!-- Draugel for District 2 - single-page composition. Sections live in src/app/sections/*. -->
+<!-- Draugel for District 2 - app shell. The home page and /shop render through
+     the router outlet; the header, footer, and nav persist across both. -->
 <a
   class="sr-only focus:not-sr-only focus:absolute focus:left-3 focus:top-3 focus:z-[60] focus:rounded-full focus:bg-paper-soft focus:px-4 focus:py-2 focus:font-display focus:font-bold focus:text-brand-blue focus:shadow-lg"
   href="#main"
@@ -12,13 +13,7 @@
   <app-site-header />
 
   <main id="main">
-    <app-hero />
-    <app-contact />
-    <app-shop />
-    <app-bio />
-    <app-experience />
-    <app-gallery />
-    <app-priorities />
+    <router-outlet />
   </main>
 
   <app-site-footer />

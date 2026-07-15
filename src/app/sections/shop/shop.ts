@@ -70,7 +70,7 @@ const MOUNT_ID = 'shop-collection';
           }
         </div>
         <p class="mt-5 font-body text-lg text-ink">
-          Rep District 2 with a tee, koozie, button, or notepad. Every order
+          Rep Draugel For District 2! Every order
           helps fund the campaign, and it ships straight to you from our print
           partner.
         </p>

@@ -19,6 +19,8 @@ import {
 } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
+import { RouterLink } from '@angular/router';
+
 import { RevealDirective } from '../../shared/reveal.directive';
 import { ButtonDirective } from '../../shared/button.directive';
 
@@ -44,7 +46,7 @@ type Frequency = 'once' | 'monthly';
 @Component({
   selector: 'app-contact',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RevealDirective, ButtonDirective],
+  imports: [RevealDirective, ButtonDirective, RouterLink],
   template: `
     <section id="get-involved" class="shell py-12 md:py-20">
       <div appReveal>
@@ -55,6 +57,11 @@ type Frequency = 'once' | 'monthly';
           mailers, and getting Lindsey's message out. Want to volunteer, host a
           yard sign, or just stay in the loop? We'd love to hear from you.
         </p>
+        <div class="mt-6">
+          <a appButton variant="secondary" size="md" routerLink="/shop">
+            Shop the merch store
+          </a>
+        </div>
       </div>
 
       <div class="mt-10 grid gap-8 lg:grid-cols-2">

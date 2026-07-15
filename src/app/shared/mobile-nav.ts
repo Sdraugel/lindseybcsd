@@ -1,11 +1,15 @@
 // Mobile navigation: a hamburger button (shown below md) that opens a menu of
-// the section links. On md+ the hero's button row is the nav, so this is hidden.
+// the nav links. On md+ the sticky header is the nav, so this is hidden.
 // Zoneless-friendly (signal toggle); closes on link click, backdrop click, or Esc.
+// Home-section links route to '/' with a fragment (so they work from the /shop
+// page too); the Shop link routes to /shop.
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { RouterLink } from '@angular/router';
 
 interface NavLink {
-  href: string;
   label: string;
+  fragment?: string;
+  route?: string;
   primary?: boolean;
 }
 
@@ -13,6 +17,7 @@ interface NavLink {
   selector: 'app-mobile-nav',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { '(document:keydown.escape)': 'close()' },
+  imports: [RouterLink],
   template: `
     <div class="md:hidden">
       <button
@@ -45,19 +50,35 @@ interface NavLink {
           aria-label="Primary"
           class="fixed right-3 top-16 z-[70] w-60 rounded-[14px] bg-paper-soft p-2 shadow-[0_20px_40px_-20px_rgba(24,42,110,0.6)] ring-1 ring-black/10"
         >
-          @for (link of links; track link.href) {
-            <a
-              [href]="link.href"
-              (click)="close()"
-              class="block rounded-xl px-4 py-3 font-display font-bold no-underline transition"
-              [class]="
-                link.primary
-                  ? 'bg-brand-blue text-white hover:bg-brand-blue-soft'
-                  : 'text-ink hover:bg-brand-blue/10 hover:text-brand-blue'
-              "
-            >
-              {{ link.label }}
-            </a>
+          @for (link of links; track link.label) {
+            @if (link.route) {
+              <a
+                [routerLink]="link.route"
+                (click)="close()"
+                class="block rounded-xl px-4 py-3 font-display font-bold no-underline transition"
+                [class]="
+                  link.primary
+                    ? 'bg-brand-blue text-white hover:bg-brand-blue-soft'
+                    : 'text-ink hover:bg-brand-blue/10 hover:text-brand-blue'
+                "
+              >
+                {{ link.label }}
+              </a>
+            } @else {
+              <a
+                [routerLink]="['/']"
+                [fragment]="link.fragment"
+                (click)="close()"
+                class="block rounded-xl px-4 py-3 font-display font-bold no-underline transition"
+                [class]="
+                  link.primary
+                    ? 'bg-brand-blue text-white hover:bg-brand-blue-soft'
+                    : 'text-ink hover:bg-brand-blue/10 hover:text-brand-blue'
+                "
+              >
+                {{ link.label }}
+              </a>
+            }
           }
         </nav>
       }
@@ -68,13 +89,13 @@ export class MobileNav {
   protected readonly open = signal(false);
 
   protected readonly links: NavLink[] = [
-    { href: '#get-involved', label: 'Get Involved', primary: true },
-    { href: '#shop', label: 'Shop' },
-    { href: '#meet', label: 'Meet Lindsey' },
-    { href: '#experience', label: 'Experience' },
-    { href: '#point-of-view', label: 'Point of View' },
-    { href: '#showing-up', label: 'Showing Up' },
-    { href: '#priorities', label: 'Priorities' },
+    { label: 'Get Involved', fragment: 'get-involved', primary: true },
+    { label: 'Shop', route: '/shop' },
+    { label: 'Meet Lindsey', fragment: 'meet' },
+    { label: 'Experience', fragment: 'experience' },
+    { label: 'Point of View', fragment: 'point-of-view' },
+    { label: 'Showing Up', fragment: 'showing-up' },
+    { label: 'Priorities', fragment: 'priorities' },
   ];
 
   protected toggle(): void {
