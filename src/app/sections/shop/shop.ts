@@ -193,6 +193,12 @@ export class Shop {
       toggle: {
         styles: { toggle: ctaButton },
       },
+      // Widen the modal so its info column has room for the full size-chart table.
+      modal: {
+        styles: {
+          modal: { 'max-width': '92%', width: '1500px' },
+        },
+      },
       // The modal opened on product click: a swipeable carousel of every product
       // image (imgWithCarousel), the variant selectors, and an Add to cart.
       modalProduct: {
@@ -207,6 +213,16 @@ export class Shop {
           button: ctaButton,
           title: { 'font-family': '"Baloo 2", sans-serif' },
           price: { 'font-family': 'Nunito, sans-serif' },
+          // Printify's wide size-chart table lives in the description. Smaller
+          // text keeps its row labels on one line, and overflow-x lets the full
+          // 8-size table scroll instead of squishing/clipping in the modal's
+          // info column. Styles-config applies inside the modal iframe.
+          description: {
+            'font-size': '11px',
+            'line-height': '1.5',
+            width: '100%',
+            'overflow-x': 'auto',
+          },
         },
       },
     };
