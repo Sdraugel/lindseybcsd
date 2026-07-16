@@ -125,7 +125,7 @@ export class Shop {
     if (!node) return;
 
     const w = window as unknown as { ShopifyBuy?: { UI?: unknown } };
-    const render = () => this.renderCollection(node);
+    const render = () => this.renderCollection();
 
     // SDK already present and initialized.
     if (w.ShopifyBuy?.UI) {
@@ -150,7 +150,7 @@ export class Shop {
   }
 
   /** Build the Storefront client and mount the collection, styled on-brand. */
-  private renderCollection(node: HTMLElement): void {
+  private renderCollection(): void {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const shopify = (window as unknown as { ShopifyBuy: any }).ShopifyBuy;
     const client = shopify.buildClient({
@@ -170,49 +170,75 @@ export class Shop {
       ':focus': { 'background-color': brandBlueInk },
     };
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    shopify.UI.onReady(client).then((ui: any) => {
-      ui.createComponent('collection', {
-        id: COLLECTION_ID,
-        node,
-        moneyFormat: '${{amount}}',
-        options: {
-          product: {
-            // "Add to cart" (not "Buy now") so buyers can bundle a tee + koozie
-            // + button into one order and one shipment.
-            buttonDestination: 'cart',
-            contents: { img: true, title: true, price: true },
-            text: { button: 'Add to cart' },
-            styles: {
-              button: ctaButton,
-              title: { 'font-family': '"Baloo 2", sans-serif' },
-              price: { 'font-family': 'Nunito, sans-serif' },
-            },
-          },
-          cart: {
-            popup: false,
-            text: { title: 'Cart', total: 'Subtotal', button: 'Checkout' },
-            styles: { button: ctaButton },
-          },
-          toggle: {
-            styles: { toggle: ctaButton },
-          },
-          modalProduct: {
-            contents: {
-              img: false,
-              imgWithCarousel: true,
-              button: false,
-              buttonWithQuantity: true,
-            },
-            text: { button: 'Add to cart' },
-            styles: {
-              button: ctaButton,
-              title: { 'font-family': '"Baloo 2", sans-serif' },
-              price: { 'font-family': 'Nunito, sans-serif' },
-            },
-          },
+    const options = {
+      product: {
+        // Clicking a card's button opens the product modal (buttonDestination:
+        // 'modal') so shoppers can flip through all of a product's images and
+        // pick a variant. The modal has its own Add to cart, so multi-item
+        // orders still work. Grid cards stay clean (no inline variant selectors).
+        buttonDestination: 'modal',
+        contents: { img: true, title: true, price: true, options: false },
+        text: { button: 'View product' },
+        styles: {
+          button: ctaButton,
+          title: { 'font-family': '"Baloo 2", sans-serif' },
+          price: { 'font-family': 'Nunito, sans-serif' },
         },
-      });
-    });
+      },
+      cart: {
+        popup: false,
+        text: { title: 'Cart', total: 'Subtotal', button: 'Checkout' },
+        styles: { button: ctaButton },
+      },
+      toggle: {
+        styles: { toggle: ctaButton },
+      },
+      // The modal opened on product click: a swipeable carousel of every product
+      // image (imgWithCarousel), the variant selectors, and an Add to cart.
+      modalProduct: {
+        contents: {
+          img: false,
+          imgWithCarousel: true,
+          button: false,
+          buttonWithQuantity: true,
+        },
+        text: { button: 'Add to cart' },
+        styles: {
+          button: ctaButton,
+          title: { 'font-family': '"Baloo 2", sans-serif' },
+          price: { 'font-family': 'Nunito, sans-serif' },
+        },
+      },
+    };
+
+    // Right after the SDK script loads, createComponent can silently no-op on a
+    // fresh page load (it renders on client-side nav but not always on a direct
+    // hit / refresh of /shop). Mount into the current live node; if nothing was
+    // injected, retry a few times until the SDK has settled.
+    let attempts = 0;
+    const mount = (): void => {
+      const node = document.getElementById(MOUNT_ID);
+      if (!node) return;
+      attempts += 1;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      shopify.UI.onReady(client)
+        .then((ui: any) => {
+          if (node.children.length > 0) return; // already mounted
+          ui.createComponent('collection', {
+            id: COLLECTION_ID,
+            node,
+            moneyFormat: '${{amount}}',
+            options,
+          });
+          window.setTimeout(() => {
+            const live = document.getElementById(MOUNT_ID);
+            if (live && live.children.length === 0 && attempts < 4) mount();
+          }, 700);
+        })
+        .catch((e: unknown) =>
+          console.error('[shop] Buy Button mount failed:', e),
+        );
+    };
+    mount();
   }
 }
