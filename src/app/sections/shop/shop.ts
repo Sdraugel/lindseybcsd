@@ -61,6 +61,41 @@ const COLLECTION_ID = '476912845020';
 const BUY_BUTTON_SDK =
   'https://sdks.shopifycdn.com/buy-button/latest/buy-button-storefront.min.js';
 
+/**
+ * Option values to hide in the storefront UI, keyed by product title then
+ * option name. This only filters what the site DISPLAYS - the variants still
+ * exist in Shopify. The durable fix is deleting the variant in Printify (it
+ * syncs to Shopify); remove the entry here once that's done.
+ */
+const HIDDEN_OPTION_VALUES: Record<string, Record<string, string[]>> = {
+  'Unisex Cotton Crew Tee': { Size: ['XS'] },
+};
+
+/**
+ * Strip hidden option values (and their variants) from a fetched product. The
+ * SDK models are getter-only (mutating them throws), so this returns a plain
+ * wrapper with filtered options/variants. The variant entries stay the ORIGINAL
+ * SDK objects - the Buy Button cart needs those exact references on add.
+ */
+function applyHiddenOptions(product: SdkProduct): SdkProduct {
+  const hidden = HIDDEN_OPTION_VALUES[product.title];
+  if (!hidden) return product;
+  const isHidden = (name: string, value: string) =>
+    (hidden[name] ?? []).includes(value);
+  return {
+    id: product.id,
+    title: product.title,
+    images: product.images,
+    options: product.options.map((opt) => ({
+      name: opt.name,
+      values: opt.values.filter((v) => !isHidden(opt.name, v.value)),
+    })),
+    variants: product.variants.filter((v) =>
+      v.selectedOptions.every((o) => !isHidden(o.name, o.value)),
+    ),
+  };
+}
+
 /** The subset of the Buy Button cart component this code calls. */
 interface CartLike {
   addVariantToCart(variant: SdkVariant, quantity: number): Promise<unknown>;
@@ -289,7 +324,9 @@ export class Shop {
         'gid://shopify/Collection/' + COLLECTION_ID,
         { productsFirst: 50 },
       );
-      this.products.set(collection.products as SdkProduct[]);
+      this.products.set(
+        (collection.products as SdkProduct[]).map(applyHiddenOptions),
+      );
     } catch (e) {
       console.error('[shop] product fetch failed:', e);
       this.loadError.set(true);
