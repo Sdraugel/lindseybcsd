@@ -1,29 +1,41 @@
 /**
  * Shop section - campaign merchandise store.
  *
- * The site embeds a Shopify *collection* (not individual products) through the
- * Shopify Buy Button SDK. The `collection` component fetches whatever products
- * live in the "Store" collection at page load, so the candidate can add,
- * remove, or re-price items entirely in Shopify admin with NO code change and
- * NO redeploy here. The code references the collection, never a product.
+ * The product grid and the product-detail modal are rendered natively by this
+ * component (see product-modal.ts): products are fetched through the Shopify
+ * Storefront client (from the Buy Button SDK bundle) out of the "Store"
+ * collection, so the candidate can still add/remove/re-price items entirely in
+ * Shopify admin with NO code change and NO redeploy here.
+ *
+ * Only the CART stays a Shopify Buy Button component (floating toggle + drawer
+ * + hosted checkout) - that part works well and handles payment off this static
+ * site. The old Buy Button collection grid + popup modal are gone: the popup
+ * lived in a locked cross-origin iframe that kept breaking on phones
+ * (unreachable close X, overflow), which is why the UI is now ours.
  *
  * The store is gated behind the three SHOPIFY_* constants below (mirrors the
  * Anedot gate in contact.ts): while any is empty the section shows an
- * "opening soon" state and no SDK is loaded. Fill all three in - from a Shopify
- * Basic plan with the Buy Button sales channel enabled - to go live. Nothing
- * else here changes when the product lineup changes.
+ * "opening soon" state and no SDK is loaded.
  *
  * Fulfillment is hands-off: Shopify orders auto-forward to Printify (print on
- * demand). Payment + checkout are hosted by Shopify off this static site.
+ * demand).
  */
 import {
   ChangeDetectionStrategy,
   Component,
   afterNextRender,
   computed,
+  signal,
 } from '@angular/core';
 
 import { RevealDirective } from '../../shared/reveal.directive';
+import {
+  ProductModal,
+  SdkProduct,
+  SdkVariant,
+  money,
+  shopifyImg,
+} from './product-modal';
 
 /**
  * Shopify storefront domain, e.g. 'draugel-store.myshopify.com'.
@@ -39,9 +51,9 @@ const SHOPIFY_DOMAIN = 'vqq2td-ex.myshopify.com';
 const STOREFRONT_ACCESS_TOKEN = '004c55faba4c6cd51527527ab59daf9a';
 
 /**
- * ID of the "Store" collection to render (copied from the Buy Button embed for
- * that collection). This is the ONLY hook the site references - manage the
- * product lineup by adding/removing products in this collection in Shopify.
+ * ID of the "Store" collection to render. This is the ONLY hook the site
+ * references - manage the product lineup by adding/removing products in this
+ * collection in Shopify.
  */
 const COLLECTION_ID = '476912845020';
 
@@ -49,13 +61,16 @@ const COLLECTION_ID = '476912845020';
 const BUY_BUTTON_SDK =
   'https://sdks.shopifycdn.com/buy-button/latest/buy-button-storefront.min.js';
 
-/** DOM id the collection component mounts into. */
-const MOUNT_ID = 'shop-collection';
+/** The subset of the Buy Button cart component this code calls. */
+interface CartLike {
+  addVariantToCart(variant: SdkVariant, quantity: number): Promise<unknown>;
+  open(): void;
+}
 
 @Component({
   selector: 'app-shop',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RevealDirective],
+  imports: [RevealDirective, ProductModal],
   template: `
     <section id="shop" class="shell py-14 md:py-20">
       <div appReveal class="max-w-2xl">
@@ -77,8 +92,66 @@ const MOUNT_ID = 'shop-collection';
       </div>
 
       @if (storeOpen()) {
-        <!-- Shopify Buy Button renders the "Store" collection into this node. -->
-        <div id="shop-collection" class="mt-10"></div>
+        @if (products(); as list) {
+          <ul
+            class="mt-10 grid list-none grid-cols-2 gap-4 p-0 sm:gap-6 lg:grid-cols-3 lg:gap-8"
+          >
+            @for (p of list; track p.id) {
+              <li>
+                <article class="paper-card flex h-full flex-col p-3 md:p-4">
+                  <button
+                    type="button"
+                    (click)="openProduct(p)"
+                    class="group block w-full cursor-pointer"
+                    [attr.aria-label]="'View ' + p.title"
+                  >
+                    <div class="aspect-square overflow-hidden rounded-lg bg-white">
+                      <img
+                        [src]="cardImg(p)"
+                        [alt]="p.title"
+                        loading="lazy"
+                        decoding="async"
+                        class="h-full w-full object-cover transition duration-200 group-hover:scale-[1.04]"
+                      />
+                    </div>
+                  </button>
+                  <h3
+                    class="mt-3 font-display text-sm font-bold leading-snug text-brand-blue md:text-base"
+                  >
+                    {{ p.title }}
+                  </h3>
+                  <p class="mt-1 text-sm font-semibold text-ink md:text-base">
+                    {{ cardPrice(p) }}
+                  </p>
+                </article>
+              </li>
+            }
+          </ul>
+        } @else if (loadError()) {
+          <div class="paper-card mt-10 p-8 text-center">
+            <p class="font-body text-ink-soft">
+              The store didn't load. Please refresh the page to try again.
+            </p>
+          </div>
+        } @else {
+          <!-- Loading skeleton while the Storefront API responds. -->
+          <ul
+            class="mt-10 grid list-none grid-cols-2 gap-4 p-0 sm:gap-6 lg:grid-cols-3 lg:gap-8"
+            aria-hidden="true"
+          >
+            @for (i of [0, 1, 2, 3, 4, 5]; track i) {
+              <li>
+                <div class="paper-card animate-pulse p-3 md:p-4">
+                  <div class="aspect-square rounded-lg bg-black/5"></div>
+                  <div class="mt-3 h-4 w-3/4 rounded bg-black/5"></div>
+                  <div class="mt-2 h-4 w-1/3 rounded bg-black/5"></div>
+                  <div class="mt-4 h-10 rounded-full bg-black/5"></div>
+                </div>
+              </li>
+            }
+          </ul>
+          <p class="sr-only" role="status">Loading products</p>
+        }
       } @else {
         <div appReveal [appReveal]="80" class="paper-card mt-10 p-8 text-center">
           <p class="font-body text-ink-soft">
@@ -101,27 +174,13 @@ const MOUNT_ID = 'shop-collection';
       -->
     </section>
 
-    <!-- Mobile close affordance for the Shopify product modal. The modal renders
-         in a cross-origin iframe (its native X is hidden on phones), so this
-         parent-page bar closes it by dispatching Escape, which the Buy Button
-         listens for. Shown only while a product modal is open - CSS keys off the
-         .is-block class Shopify sets on the modal frame (see styles.css). -->
-    <button type="button" class="shop-modal-back" (click)="closeModal()">
-      <svg
-        width="18"
-        height="18"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2.4"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        aria-hidden="true"
-      >
-        <path d="M15 18l-6-6 6-6" />
-      </svg>
-      Back to Shop
-    </button>
+    @if (selected(); as p) {
+      <app-product-modal
+        [product]="p"
+        [onAdd]="addToCart"
+        (closed)="selected.set(null)"
+      />
+    }
   `,
 })
 export class Shop {
@@ -133,60 +192,62 @@ export class Shop {
       COLLECTION_ID.length > 0,
   );
 
+  /** Products in the Store collection; null while loading. */
+  protected readonly products = signal<SdkProduct[] | null>(null);
+
+  /** Storefront fetch failed (network / config). */
+  protected readonly loadError = signal(false);
+
+  /** Product currently open in the detail modal. */
+  protected readonly selected = signal<SdkProduct | null>(null);
+
+  /** Resolves to the Buy Button cart component once the SDK is ready. */
+  private cartReady: Promise<CartLike> | null = null;
+
   constructor() {
     // Browser-only: afterNextRender never runs during SSR/prerender, so the
     // Shopify SDK and `document` are only ever touched in the browser.
     afterNextRender(() => {
-      if (this.storeOpen()) this.mountStore();
+      if (this.storeOpen()) void this.init();
     });
   }
 
+  protected openProduct(p: SdkProduct): void {
+    this.selected.set(p);
+  }
+
+  /** First product photo, sized for the card grid. */
+  protected cardImg(p: SdkProduct): string {
+    return shopifyImg(p.images[0]?.src, 640);
+  }
+
+  /** "$30.00" or "From $25.00" when variants differ in price. */
+  protected cardPrice(p: SdkProduct): string {
+    const prices = p.variants.map((v) => Number(v.price.amount));
+    const min = Math.min(...prices);
+    const max = Math.max(...prices);
+    return min === max ? money(min) : 'From ' + money(min);
+  }
+
   /**
-   * Close the open Shopify product modal from the mobile "Back to Shop" bar.
-   * The modal lives in a cross-origin iframe we cannot script into and its native
-   * close (overlay/Escape) isn't reachable from here, but its frame element lives
-   * in this document. Dropping the is-active/is-block classes is exactly what the
-   * SDK does to hide it (display:none) - verified to close cleanly, reopen on the
-   * next product click, and leave no body scroll-lock behind.
+   * Add to cart callback handed to the product modal (arrow fn keeps `this`).
+   * Adding through the Buy Button cart component opens its drawer, which is the
+   * user feedback; the modal is closed on success so the drawer is visible.
    */
-  protected closeModal(): void {
-    document
-      .querySelector('.shopify-buy-frame--modal')
-      ?.classList.remove('is-active', 'is-block');
-  }
+  protected readonly addToCart = async (
+    variant: SdkVariant,
+    quantity: number,
+  ): Promise<void> => {
+    if (!this.cartReady) throw new Error('cart not initialized');
+    const cart = await this.cartReady;
+    await cart.addVariantToCart(variant, quantity);
+    this.selected.set(null);
+    cart.open(); // show the drawer as confirmation
+  };
 
-  /** Load the Buy Button SDK (once) then render the collection. */
-  private mountStore(): void {
-    const node = document.getElementById(MOUNT_ID);
-    if (!node) return;
-
-    const w = window as unknown as { ShopifyBuy?: { UI?: unknown } };
-    const render = () => this.renderCollection();
-
-    // SDK already present and initialized.
-    if (w.ShopifyBuy?.UI) {
-      render();
-      return;
-    }
-
-    // Script tag already injected (e.g. by a prior mount) - wait for it.
-    const existing = document.querySelector<HTMLScriptElement>(
-      `script[src="${BUY_BUTTON_SDK}"]`,
-    );
-    if (existing) {
-      existing.addEventListener('load', render);
-      return;
-    }
-
-    const script = document.createElement('script');
-    script.async = true;
-    script.src = BUY_BUTTON_SDK;
-    script.onload = render;
-    (document.head || document.body).appendChild(script);
-  }
-
-  /** Build the Storefront client and mount the collection, styled on-brand. */
-  private renderCollection(): void {
+  /** Load the SDK, mount the cart (drawer + floating toggle), fetch products. */
+  private async init(): Promise<void> {
+    await this.loadSdk();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const shopify = (window as unknown as { ShopifyBuy: any }).ShopifyBuy;
     const client = shopify.buildClient({
@@ -195,107 +256,66 @@ export class Shop {
     });
 
     // Brand tokens mirrored from src/styles.css @theme.
-    const brandBlue = '#2748c8';
-    const brandBlueInk = '#182a6e';
     const ctaButton = {
       'font-family': 'Nunito, sans-serif',
       'font-weight': '700',
       'border-radius': '9999px',
-      'background-color': brandBlue,
-      ':hover': { 'background-color': brandBlueInk },
-      ':focus': { 'background-color': brandBlueInk },
+      'background-color': '#2748c8',
+      ':hover': { 'background-color': '#182a6e' },
+      ':focus': { 'background-color': '#182a6e' },
     };
 
-    const options = {
-      product: {
-        // Clicking a card's button opens the product modal (buttonDestination:
-        // 'modal') so shoppers can flip through all of a product's images and
-        // pick a variant. The modal has its own Add to cart, so multi-item
-        // orders still work. Grid cards stay clean (no inline variant selectors).
-        buttonDestination: 'modal',
-        contents: { img: true, title: true, price: true, options: false },
-        text: { button: 'View product' },
-        styles: {
-          button: ctaButton,
-          title: { 'font-family': '"Baloo 2", sans-serif' },
-          price: { 'font-family': 'Nunito, sans-serif' },
-        },
-      },
-      cart: {
-        popup: false,
-        text: { title: 'Cart', total: 'Subtotal', button: 'Checkout' },
-        styles: { button: ctaButton },
-      },
-      toggle: {
-        styles: { toggle: ctaButton },
-      },
-      // Keep the modal compact. The old wide (1500px) sizing existed to fit
-      // Printify's size-chart table; with that removed the modal only holds an
-      // image + variant pickers, so a narrower box looks better and stays short
-      // enough on phones that the close "X" (which hangs just above the box) is
-      // never pushed off the top of the screen. Do NOT add overflow/max-height
-      // here - clipping the box hides that hanging X.
-      modal: {
-        styles: {
-          modal: { 'max-width': '92%', width: '900px' },
-          // On phones the top-right X collides with the site nav and is awkward
-          // to reach, so hide it there; this component renders a bottom "Back to
-          // Shop" bar (see .shop-modal-back / closeModal) as the mobile close.
-          // Desktop keeps the native X.
-          close: {
-            '@media (max-width: 767px)': { display: 'none' },
-          },
-        },
-      },
-      // The modal opened on product click: a swipeable carousel of every product
-      // image (imgWithCarousel), the variant selectors, and an Add to cart.
-      // description: false hides Printify's text size-chart - sizing now lives in
-      // a product image in the carousel instead.
-      modalProduct: {
-        contents: {
-          img: false,
-          imgWithCarousel: true,
-          button: false,
-          buttonWithQuantity: true,
-          description: false,
-        },
-        text: { button: 'Add to cart' },
-        styles: {
-          button: ctaButton,
-          title: { 'font-family': '"Baloo 2", sans-serif' },
-          price: { 'font-family': 'Nunito, sans-serif' },
-        },
-      },
-    };
-
-    // Right after the SDK script loads, createComponent can silently no-op on a
-    // fresh page load (it renders on client-side nav but not always on a direct
-    // hit / refresh of /shop). Mount into the current live node; if nothing was
-    // injected, retry a few times until the SDK has settled.
-    let attempts = 0;
-    const mount = (): void => {
-      const node = document.getElementById(MOUNT_ID);
-      if (!node) return;
-      attempts += 1;
+    this.cartReady = shopify.UI.onReady(client).then(
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      shopify.UI.onReady(client)
-        .then((ui: any) => {
-          if (node.children.length > 0) return; // already mounted
-          ui.createComponent('collection', {
-            id: COLLECTION_ID,
-            node,
-            moneyFormat: '${{amount}}',
-            options,
+      (ui: any): CartLike => {
+        if (ui.components.cart.length === 0) {
+          ui.createComponent('cart', {
+            options: {
+              cart: {
+                popup: false,
+                text: { title: 'Cart', total: 'Subtotal', button: 'Checkout' },
+                styles: { button: ctaButton },
+              },
+              toggle: { styles: { toggle: ctaButton } },
+            },
           });
-          window.setTimeout(() => {
-            const live = document.getElementById(MOUNT_ID);
-            if (live && live.children.length === 0 && attempts < 4) mount();
-          }, 700);
-        })
-        .catch((e: unknown) =>
-          console.error('[shop] Buy Button mount failed:', e),
-        );
-    };
-    mount();
+        }
+        return ui.components.cart[0] as CartLike;
+      },
+    );
+
+    try {
+      const collection = await client.collection.fetchWithProducts(
+        'gid://shopify/Collection/' + COLLECTION_ID,
+        { productsFirst: 50 },
+      );
+      this.products.set(collection.products as SdkProduct[]);
+    } catch (e) {
+      console.error('[shop] product fetch failed:', e);
+      this.loadError.set(true);
+    }
+  }
+
+  /** Inject the Buy Button SDK script once and wait for it. */
+  private loadSdk(): Promise<void> {
+    const w = window as unknown as { ShopifyBuy?: { UI?: unknown } };
+    if (w.ShopifyBuy?.UI) return Promise.resolve();
+
+    return new Promise((resolve, reject) => {
+      const existing = document.querySelector<HTMLScriptElement>(
+        `script[src="${BUY_BUTTON_SDK}"]`,
+      );
+      if (existing) {
+        existing.addEventListener('load', () => resolve());
+        existing.addEventListener('error', reject);
+        return;
+      }
+      const script = document.createElement('script');
+      script.async = true;
+      script.src = BUY_BUTTON_SDK;
+      script.onload = () => resolve();
+      script.onerror = reject;
+      (document.head || document.body).appendChild(script);
+    });
   }
 }
