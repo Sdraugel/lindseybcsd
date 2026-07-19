@@ -303,3 +303,38 @@
 body:has(.shopify-buy-frame--modal.is-block) app-mobile-nav {
   display: none;
 }
+
+/* Mobile "Back to Shop" bar (rendered by app-shop) that closes the Shopify
+   product modal. The modal's native X is hidden on phones (see shop.ts), so this
+   is the phone close affordance. Hidden by default; shown, above the modal
+   iframe, only while a product modal is visible and only on phones (desktop
+   keeps the native X). z-index clears the modal frame (~2147483646). */
+.shop-modal-back {
+  display: none;
+}
+@media (max-width: 767px) {
+  body:has(.shopify-buy-frame--modal.is-block) .shop-modal-back {
+    position: fixed;
+    left: 50%;
+    bottom: 20px;
+    transform: translateX(-50%);
+    z-index: 2147483647;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.8rem 1.5rem;
+    border-radius: 9999px;
+    border: 2px solid rgba(255, 255, 255, 0.85);
+    background-color: var(--color-brand-blue);
+    color: #fff;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1rem;
+    line-height: 1;
+    box-shadow: 0 16px 32px -10px rgba(24, 42, 110, 0.9);
+  }
+  body:has(.shopify-buy-frame--modal.is-block) .shop-modal-back:active {
+    transform: translateX(-50%) scale(0.97);
+    background-color: var(--color-brand-blue-ink);
+  }
+}

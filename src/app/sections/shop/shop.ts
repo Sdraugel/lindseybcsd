@@ -100,6 +100,28 @@ const MOUNT_ID = 'shop-collection';
         footer disclaimer.
       -->
     </section>
+
+    <!-- Mobile close affordance for the Shopify product modal. The modal renders
+         in a cross-origin iframe (its native X is hidden on phones), so this
+         parent-page bar closes it by dispatching Escape, which the Buy Button
+         listens for. Shown only while a product modal is open - CSS keys off the
+         .is-block class Shopify sets on the modal frame (see styles.css). -->
+    <button type="button" class="shop-modal-back" (click)="closeModal()">
+      <svg
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2.4"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <path d="M15 18l-6-6 6-6" />
+      </svg>
+      Back to Shop
+    </button>
   `,
 })
 export class Shop {
@@ -117,6 +139,20 @@ export class Shop {
     afterNextRender(() => {
       if (this.storeOpen()) this.mountStore();
     });
+  }
+
+  /**
+   * Close the open Shopify product modal from the mobile "Back to Shop" bar.
+   * The modal lives in a cross-origin iframe we cannot script into and its native
+   * close (overlay/Escape) isn't reachable from here, but its frame element lives
+   * in this document. Dropping the is-active/is-block classes is exactly what the
+   * SDK does to hide it (display:none) - verified to close cleanly, reopen on the
+   * next product click, and leave no body scroll-lock behind.
+   */
+  protected closeModal(): void {
+    document
+      .querySelector('.shopify-buy-frame--modal')
+      ?.classList.remove('is-active', 'is-block');
   }
 
   /** Load the Buy Button SDK (once) then render the collection. */
@@ -202,6 +238,13 @@ export class Shop {
       modal: {
         styles: {
           modal: { 'max-width': '92%', width: '900px' },
+          // On phones the top-right X collides with the site nav and is awkward
+          // to reach, so hide it there; this component renders a bottom "Back to
+          // Shop" bar (see .shop-modal-back / closeModal) as the mobile close.
+          // Desktop keeps the native X.
+          close: {
+            '@media (max-width: 767px)': { display: 'none' },
+          },
         },
       },
       // The modal opened on product click: a swipeable carousel of every product
